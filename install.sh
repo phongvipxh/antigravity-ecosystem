@@ -8,21 +8,26 @@ echo "=================================================="
 GEMINI_CONFIG="$HOME/.gemini/config"
 GEMINI_RULES="$GEMINI_CONFIG/rules"
 GEMINI_SKILLS="$GEMINI_CONFIG/skills"
+GEMINI_SCRIPTS="$GEMINI_CONFIG/scripts"
 
 # 1. Create Target Directories
-echo -e "\n[1/4] Preparing directories..."
-mkdir -p "$GEMINI_RULES" "$GEMINI_SKILLS" "$HOME/.claude"
+echo -e "\n[1/5] Preparing directories..."
+mkdir -p "$GEMINI_RULES" "$GEMINI_SKILLS" "$GEMINI_SCRIPTS" "$HOME/.claude"
 
 # 2. Copy Rules
-echo "[2/4] Deploying 10 Master Rules..."
+echo "[2/5] Deploying 10 Master Rules..."
 cp -R rules/* "$GEMINI_RULES/"
 
 # 3. Copy Skills
-echo "[3/4] Deploying 18 Autonomous Skills..."
+echo "[3/5] Deploying 19 Autonomous Skills..."
 cp -R skills/* "$GEMINI_SKILLS/"
 
-# 4. Copy MCP Configuration
-echo "[4/4] Deploying MCP Servers..."
+# 4. Copy Harness Engineering Scripts
+echo "[4/5] Deploying Harness Engineering Tools (ACI & Checkpointing)..."
+cp -R scripts/* "$GEMINI_SCRIPTS/"
+
+# 5. Copy MCP Configuration
+echo "[5/5] Deploying MCP Servers..."
 if [ -f "mcp/mcp_config.json" ]; then
     cp -f mcp/mcp_config.json "$GEMINI_CONFIG/mcp_config.json"
 fi

@@ -40,3 +40,22 @@
 - **On External Import/API:** Immediately trigger zero-hallucination verification against actual package version and symbol exports.
 - **On Architecture Request:** Autonomously route to `archify` with appropriate visual preset (`blueprint`, `editorial`, `classic`).
 - **On Pre-Commit:** Run automated secret scanning for API keys, tokens, and credentials.
+
+## 9. ACI Terminal Output Condensation (Princeton SWE-agent Standard)
+- Raw terminal streams pollute the attention window with ANSI escape sequences, spinner rewrites, and hundreds of build lines.
+- Wrap execution commands with `scripts/aci-condenser.js`:
+  - **Success (`exit 0`):** Automatically collapse verbose passes into high-signal telemetry and summary metrics.
+  - **Failure (`exit != 0`):** Surgically extract only the core stacktrace and assertion failure lines (saving 80–90% token budget).
+
+## 10. Ephemeral Micro-Checkpointing & Atomic Rollback
+- Never perform risky multi-file refactors without an atomic recovery anchor.
+- Utilize `scripts/git-checkpoint.js`:
+  - **Pre-Mutation Anchor:** Snapshot the working tree into an isolated git ref (`refs/checkpoints/<timestamp>_<label>`) before touching code.
+  - **Atomic Rollback:** If speculative implementations or multi-file edits fail to converge to Exit Code 0, rollback atomically in 1 step without leaving messy intermediate artifacts.
+
+## 11. Dual-Agent Adversarial Verification Gate (Anthropic Managed Agents Pattern)
+- Eliminate author confirmation bias by separating the Executor from the Auditor:
+  - The author agent must never be the sole judge of its own edge cases.
+  - For concurrent, security-critical, or high-blast-radius subsystems, invoke the `dual-agent-auditor` skill:
+  - The Auditor receives ONLY the git diff and requirements under a strict information barrier, synthesizing adversarial fuzz tests to stress test the implementation before production certification.
+

@@ -54,7 +54,8 @@ Run the script using `run_command` with sufficient `WaitMsBeforeAsync` to allow 
 
 ### Step 3: Extract & Prune
 Parse the returned JSON telemetry.
-- **Noise Pruning:** Never print thousands of raw lines. Present a high-signal comparative Markdown table.
+- **Noise Pruning:** Use `scripts/aci-condenser.js` or internal filtering. Never print thousands of raw lines. Present a high-signal comparative Markdown table.
+- **Micro-Checkpointing:** Before starting candidate tournaments, anchor state via `scripts/git-checkpoint.js create "pre-tournament"`. If all candidates fail, rollback cleanly via `scripts/git-checkpoint.js rollback "pre-tournament"`.
 - **Winning Path Selection:** Automatically adopt the patch with 100% test pass rate and lowest latency.
 - **Teardown:** Clean up scratch artifacts or preserve only the winning implementation in the project root.
 
