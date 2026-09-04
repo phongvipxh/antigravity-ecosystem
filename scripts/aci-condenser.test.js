@@ -101,4 +101,17 @@ describe('ACI Terminal Condenser Suite', () => {
     assert.equal(formatCommandArg("'single quoted'"), "'single quoted'");
     assert.equal(formatCommandArg('-m Commit message with spaces'), '"-m Commit message with spaces"');
   });
+
+  test('extractFailureDiagnostics preserves both head and tail when errors exceed 60 lines', () => {
+    const lines = [];
+    lines.push('FAIL: Test 1');
+    for (let i = 2; i <= 80; i++) {
+      lines.push(`Error: Sub-failure ${i}`);
+    }
+    const diagnostics = extractFailureDiagnostics(lines);
+    assert.ok(diagnostics.length <= 62);
+    assert.ok(diagnostics[0].includes('FAIL: Test 1'), 'First error line preserved');
+    assert.ok(diagnostics[diagnostics.length - 1].includes('Sub-failure 80'), 'Last error line preserved');
+    assert.ok(diagnostics.some((l) => l.includes('middle error lines')), 'Middle collapsed notice present');
+  });
 });

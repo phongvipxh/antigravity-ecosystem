@@ -115,8 +115,12 @@ function extractFailureDiagnostics(lines) {
   }
 
   const uniqueLines = Array.from(new Set(errorLines));
-  if (uniqueLines.length > 25) {
-    return uniqueLines.slice(0, 20).concat([`... [truncated ${uniqueLines.length - 20} lines of error log]`]);
+  if (uniqueLines.length > 60) {
+    return [
+      ...uniqueLines.slice(0, 30),
+      `... [collapsed ${uniqueLines.length - 60} middle error lines] ...`,
+      ...uniqueLines.slice(-30)
+    ];
   }
   return uniqueLines;
 }

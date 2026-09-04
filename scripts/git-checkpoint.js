@@ -109,6 +109,17 @@ function listCheckpoints(cwd = process.cwd()) {
   }
 }
 
+function isStashCommit(sha, cwd = process.cwd()) {
+  try {
+    const parent2 = execSync(`git rev-parse "${sha}^2"`, { cwd, stdio: 'pipe' }).toString().trim();
+    if (!parent2) return false;
+    const subject = execSync(`git log -1 --format="%s" ${sha}`, { cwd, stdio: 'pipe' }).toString().trim();
+    return /^(?:WIP on |.*: (?:checkpoint: |WIP on )|checkpoint: )/i.test(subject);
+  } catch {
+    return false;
+  }
+}
+
 function rollbackCheckpoint(targetIdOrSha, cwd = process.cwd()) {
   if (!isGitRepo(cwd)) {
     throw new Error(`Directory "${cwd}" is not inside a git repository.`);
@@ -125,11 +136,21 @@ function rollbackCheckpoint(targetIdOrSha, cwd = process.cwd()) {
     sha = match.sha;
   }
 
-  // Cleanly restore working tree and index to that commit SHA
-  // Using git restore or git reset depending on desired blast radius
+  // Cleanly restore working tree and index
   try {
-    // Reset index and working tree to the checkpoint commit
-    execSync(`git reset --hard ${sha}`, { cwd, stdio: 'pipe' });
+    if (isStashCommit(sha, cwd)) {
+      // Stash commit: reset HEAD to base commit, then apply stashed changes
+      const parent1 = execSync(`git rev-parse "${sha}^1"`, { cwd, stdio: 'pipe' }).toString().trim();
+      execSync(`git reset --hard ${parent1}`, { cwd, stdio: 'pipe' });
+      try {
+        execSync(`git stash apply --index ${sha}`, { cwd, stdio: 'pipe' });
+      } catch {
+        execSync(`git stash apply ${sha}`, { cwd, stdio: 'pipe' });
+      }
+    } else {
+      // Regular commit: reset directly
+      execSync(`git reset --hard ${sha}`, { cwd, stdio: 'pipe' });
+    }
     return {
       success: true,
       rolledBackToSha: sha
@@ -203,6 +224,7 @@ if (require.main === module) {
 module.exports = {
   isGitRepo,
   getHeadSha,
+  isStashCommit,
   createCheckpoint,
   listCheckpoints,
   rollbackCheckpoint,
