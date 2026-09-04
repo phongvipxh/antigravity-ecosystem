@@ -169,15 +169,28 @@ function runCondensed(commandArgs, options = {}) {
       stdio: ['inherit', 'pipe', 'pipe']
     });
 
+    const MAX_OUTPUT_BUFFER_BYTES = 5 * 1024 * 1024; // 5MB stream guard
     let stdoutBuffer = '';
     let stderrBuffer = '';
+    let stdoutCapped = false;
+    let stderrCapped = false;
 
     child.stdout.on('data', (chunk) => {
-      stdoutBuffer += chunk.toString();
+      if (stdoutBuffer.length < MAX_OUTPUT_BUFFER_BYTES) {
+        stdoutBuffer += chunk.toString();
+      } else if (!stdoutCapped) {
+        stdoutBuffer += '\n[ACI: STDOUT STREAM EXCEEDED 5MB - TRUNCATED TO PREVENT MEMORY SPIKE]\n';
+        stdoutCapped = true;
+      }
     });
 
     child.stderr.on('data', (chunk) => {
-      stderrBuffer += chunk.toString();
+      if (stderrBuffer.length < MAX_OUTPUT_BUFFER_BYTES) {
+        stderrBuffer += chunk.toString();
+      } else if (!stderrCapped) {
+        stderrBuffer += '\n[ACI: STDERR STREAM EXCEEDED 5MB - TRUNCATED TO PREVENT MEMORY SPIKE]\n';
+        stderrCapped = true;
+      }
     });
 
     child.on('close', (code) => {

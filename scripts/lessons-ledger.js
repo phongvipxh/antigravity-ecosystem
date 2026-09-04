@@ -84,9 +84,12 @@ function readJsonlFile(filePath) {
   }
 }
 
+const MAX_STORED_LESSONS = 500;
+
 function writeJsonlFile(filePath, entries) {
   ensureDirExists(filePath);
-  const content = entries.map((entry) => JSON.stringify(entry)).join('\n') + (entries.length > 0 ? '\n' : '');
+  const boundedEntries = entries.length > MAX_STORED_LESSONS ? entries.slice(-MAX_STORED_LESSONS) : entries;
+  const content = boundedEntries.map((entry) => JSON.stringify(entry)).join('\n') + (boundedEntries.length > 0 ? '\n' : '');
   fs.writeFileSync(filePath, content, 'utf8');
 }
 
@@ -123,7 +126,9 @@ function recordLesson(lessonData, options = {}) {
     throw new Error('Lesson must contain at least trigger_pattern and verified_solution');
   }
 
-  const normalizedTrigger = lessonData.trigger_pattern.trim();
+  const normalizedTrigger = lessonData.trigger_pattern.trim().slice(0, 500);
+  const rootCause = (lessonData.root_cause || 'Identified via automated harness resolution').slice(0, 1000);
+  const verifiedSolution = lessonData.verified_solution.slice(0, 2000);
   const triggerTokens = tokenize(normalizedTrigger);
   const now = new Date().toISOString();
 
@@ -154,8 +159,8 @@ function recordLesson(lessonData, options = {}) {
     if (matchedIndex >= 0) {
       const existingLesson = existing[matchedIndex];
       const mergedTags = Array.from(new Set([...(existingLesson.tags || []), ...(lessonData.tags || [])]));
-      existingLesson.root_cause = lessonData.root_cause || existingLesson.root_cause;
-      existingLesson.verified_solution = lessonData.verified_solution;
+      existingLesson.root_cause = rootCause;
+      existingLesson.verified_solution = verifiedSolution;
       existingLesson.tags = mergedTags;
       existingLesson.occurrences = (existingLesson.occurrences || 1) + 1;
       existingLesson.updated_at = now;
@@ -164,8 +169,8 @@ function recordLesson(lessonData, options = {}) {
       const newLesson = {
         id: lessonData.id || generateLessonId(normalizedTrigger),
         trigger_pattern: normalizedTrigger,
-        root_cause: lessonData.root_cause || 'Identified via automated harness resolution',
-        verified_solution: lessonData.verified_solution,
+        root_cause: rootCause,
+        verified_solution: verifiedSolution,
         timestamp: now,
         updated_at: now,
         tags: Array.isArray(lessonData.tags) ? lessonData.tags : [],
@@ -248,6 +253,15 @@ function distillFromScratchpad(workspaceDir = process.cwd(), verifiedSolution = 
     return null;
   }
 
+  // Guard 1: Only distill if the scratchpad has marked resolved or explicit verifiedSolution passed
+  const isResolved = content.includes('TASK RESOLVED: MECHANICAL EXIT CODE 0 VERIFIED') || Boolean(verifiedSolution);
+  if (!isResolved) return null;
+
+  // Guard 2: Prevent re-distilling the same scratchpad resolution
+  if (content.includes('**Distilled to Lessons Ledger:**')) {
+    return null;
+  }
+
   const failureMatches = content.match(/- \*\*Failure Signature:\*\* `([^`]+)`/g);
   if (!failureMatches || failureMatches.length === 0) return null;
 
@@ -271,6 +285,12 @@ function distillFromScratchpad(workspaceDir = process.cwd(), verifiedSolution = 
     },
     { workspaceDir }
   );
+
+  // Mark scratchpad as distilled so subsequent commands do not duplicate
+  try {
+    const updatedContent = content + `\n> **Distilled to Lessons Ledger:** \`${lesson.id}\`\n`;
+    fs.writeFileSync(scratchpadPath, updatedContent, 'utf8');
+  } catch {}
 
   return lesson;
 }

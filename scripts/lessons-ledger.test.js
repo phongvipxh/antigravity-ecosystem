@@ -131,5 +131,26 @@ describe('Cross-Session Reflection Ledger Suite', () => {
 
     const localLedger = getLocalLedgerPath(tempDir);
     assert.ok(fs.existsSync(localLedger));
+
+    // Calling distill a second time on the same scratchpad returns null (idempotent)
+    const secondDistill = distillFromScratchpad(tempDir);
+    assert.strictEqual(secondDistill, null);
+  });
+
+  it('distillFromScratchpad returns null if scratchpad has not resolved yet', () => {
+    const agentsDir = path.join(tempDir, '.agents');
+    fs.mkdirSync(agentsDir, { recursive: true });
+    const failingContent = [
+      '# 🧠 ACTIVE TASK HYPOTHESIS & SCRATCHPAD LEDGER',
+      '### ✖ Attempt #1 [2026-09-04T00:00:00.000Z]',
+      '- **Command:** `npm test`',
+      '- **Failure Signature:** `TypeError: crash`',
+      '---'
+    ].join('\n');
+    fs.writeFileSync(path.join(agentsDir, 'scratchpad.md'), failingContent, 'utf8');
+
+    // Without explicit verifiedSolution or TASK RESOLVED header, it should NOT distill
+    const distilled = distillFromScratchpad(tempDir);
+    assert.strictEqual(distilled, null);
   });
 });

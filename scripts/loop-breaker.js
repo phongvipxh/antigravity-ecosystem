@@ -83,10 +83,20 @@ function clearLedger(workspaceDir = process.cwd()) {
   }
 }
 
+function maskSecrets(text) {
+  if (!text || typeof text !== 'string') return '';
+  return text
+    .replace(/(?:sk-ant-[a-zA-Z0-9_-]{10,})/g, 'sk-ant-***[MASKED]')
+    .replace(/(?:sk-[a-zA-Z0-9_-]{20,})/g, 'sk-***[MASKED]')
+    .replace(/(?:ghp_[a-zA-Z0-9]{30,})/g, 'ghp_***[MASKED]')
+    .replace(/(?:AIzaSy[a-zA-Z0-9_-]{28,})/g, 'AIzaSy***[MASKED]')
+    .replace(/(?:Bearer\s+[a-zA-Z0-9_\-\.]{20,})/gi, 'Bearer ***[MASKED]');
+}
+
 function recordExecution(command, output, exitCode, workspaceDir = process.cwd()) {
   const ledger = readLedger(workspaceDir);
-  const trimmedCmd = (command || '').trim();
-  const trimmedOutput = (output || '').slice(0, 1500).trim();
+  const trimmedCmd = maskSecrets(command || '').trim();
+  const trimmedOutput = maskSecrets(output || '').slice(0, 1500).trim();
   const outputHash = crypto.createHash('sha256').update(trimmedOutput).digest('hex').slice(0, 16);
 
   const entry = {

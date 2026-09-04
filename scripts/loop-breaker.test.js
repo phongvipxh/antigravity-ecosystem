@@ -73,4 +73,19 @@ describe('Anti-Loop Circuit Breaker Suite', () => {
     assert.equal(state.breakerTriggered, false);
     assert.equal(state.streak, 0);
   });
+
+  test('masks sensitive API tokens and credentials in recorded history', () => {
+    const sensitiveCmd = 'curl -H "Authorization: Bearer my-secret-jwt-token-1234567890" https://api.openai.com -u sk-abcdef1234567890abcdef1234567890';
+    const sensitiveOutput = 'Failed with key AIzaSyA1B2C3D4E5F6G7H8I9J0K1L2M3N4O5';
+
+    recordExecution(sensitiveCmd, sensitiveOutput, 1, tmpWorkspace);
+
+    const ledgerFile = path.join(tmpWorkspace, '.agents', 'loop-ledger.json');
+    const content = fs.readFileSync(ledgerFile, 'utf8');
+
+    assert.ok(!content.includes('my-secret-jwt-token-1234567890'));
+    assert.ok(!content.includes('sk-abcdef1234567890abcdef1234567890'));
+    assert.ok(!content.includes('AIzaSyA1B2C3D4E5F6G7H8I9J0K1L2M3N4O5'));
+    assert.ok(content.includes('***[MASKED]'));
+  });
 });

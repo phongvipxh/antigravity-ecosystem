@@ -111,7 +111,7 @@ function rollbackCheckpoint(targetIdOrSha, cwd = process.cwd()) {
   }
 
   let sha = targetIdOrSha;
-  if (!/^[0-9a-f]{40}$/.test(targetIdOrSha)) {
+  if (!/^[0-9a-f]{7,64}$/i.test(targetIdOrSha)) {
     // Treat as checkpoint ID or label
     const checkpoints = listCheckpoints(cwd);
     const match = checkpoints.find((cp) => cp.id === targetIdOrSha || cp.label === targetIdOrSha);

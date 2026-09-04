@@ -56,10 +56,23 @@ function extractFailureCore(rawOutput) {
   return lines[0] ? lines[0].slice(0, 180) : 'Non-zero exit code';
 }
 
+function maskSecrets(text) {
+  if (!text || typeof text !== 'string') return '';
+  return text
+    .replace(/(?:sk-ant-[a-zA-Z0-9_-]{10,})/g, 'sk-ant-***[MASKED]')
+    .replace(/(?:sk-[a-zA-Z0-9_-]{20,})/g, 'sk-***[MASKED]')
+    .replace(/(?:ghp_[a-zA-Z0-9]{30,})/g, 'ghp_***[MASKED]')
+    .replace(/(?:AIzaSy[a-zA-Z0-9_-]{28,})/g, 'AIzaSy***[MASKED]')
+    .replace(/(?:Bearer\s+[a-zA-Z0-9_\-\.]{20,})/gi, 'Bearer ***[MASKED]');
+}
+
 function recordFailure(command, rawOutput, workspaceDir = process.cwd(), notes = '') {
   const filePath = getScratchpadPath(workspaceDir);
   const now = new Date().toISOString();
-  const failureCore = extractFailureCore(rawOutput);
+  const sanitizedCmd = maskSecrets(command || '');
+  const sanitizedOutput = maskSecrets(rawOutput || '');
+  const sanitizedNotes = maskSecrets(notes || '');
+  const failureCore = extractFailureCore(sanitizedOutput);
 
   let existing = readScratchpad(workspaceDir);
   let attemptNumber = 1;
@@ -84,9 +97,9 @@ function recordFailure(command, rawOutput, workspaceDir = process.cwd(), notes =
 
   const failureEntry = [
     `### ✖ Attempt #${attemptNumber} [${now}]`,
-    `- **Command:** \`${command}\``,
+    `- **Command:** \`${sanitizedCmd}\``,
     `- **Failure Signature:** \`${failureCore}\``,
-    notes ? `- **Notes:** ${notes}` : '- **Guideline:** Do not repeat this patch. Re-read surrounding code to formulate a new hypothesis.',
+    sanitizedNotes ? `- **Notes:** ${sanitizedNotes}` : '- **Guideline:** Do not repeat this patch. Re-read surrounding code to formulate a new hypothesis.',
     '',
     '---',
     ''
