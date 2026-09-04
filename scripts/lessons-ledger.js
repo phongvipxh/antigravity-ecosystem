@@ -84,12 +84,9 @@ function readJsonlFile(filePath) {
   }
 }
 
-const MAX_STORED_LESSONS = 500;
-
 function writeJsonlFile(filePath, entries) {
   ensureDirExists(filePath);
-  const boundedEntries = entries.length > MAX_STORED_LESSONS ? entries.slice(-MAX_STORED_LESSONS) : entries;
-  const content = boundedEntries.map((entry) => JSON.stringify(entry)).join('\n') + (boundedEntries.length > 0 ? '\n' : '');
+  const content = entries.map((entry) => JSON.stringify(entry)).join('\n') + (entries.length > 0 ? '\n' : '');
   fs.writeFileSync(filePath, content, 'utf8');
 }
 
@@ -126,9 +123,9 @@ function recordLesson(lessonData, options = {}) {
     throw new Error('Lesson must contain at least trigger_pattern and verified_solution');
   }
 
-  const normalizedTrigger = lessonData.trigger_pattern.trim().slice(0, 500);
-  const rootCause = (lessonData.root_cause || 'Identified via automated harness resolution').slice(0, 1000);
-  const verifiedSolution = lessonData.verified_solution.slice(0, 2000);
+  const normalizedTrigger = lessonData.trigger_pattern.trim();
+  const rootCause = lessonData.root_cause || 'Identified via automated harness resolution';
+  const verifiedSolution = lessonData.verified_solution;
   const triggerTokens = tokenize(normalizedTrigger);
   const now = new Date().toISOString();
 

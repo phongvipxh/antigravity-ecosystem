@@ -7,7 +7,8 @@ const {
   extractSummary,
   extractFailureDiagnostics,
   condenseOutput,
-  runCondensed
+  runCondensed,
+  HeadTailCollector
 } = require('./aci-condenser.js');
 
 describe('ACI Terminal Condenser Suite', () => {
@@ -75,5 +76,20 @@ describe('ACI Terminal Condenser Suite', () => {
     const { exitCode, condensedOutput } = await runCondensed(['node', '-e', '"console.log(\'hello aci\')"']);
     assert.equal(exitCode, 0);
     assert.ok(condensedOutput.includes('hello aci'));
+  });
+
+  test('HeadTailCollector preserves head and tail without dropping final diagnostics under heavy volume', () => {
+    // 500 byte limit for test: 100 bytes head, 150 bytes tail
+    const collector = new HeadTailCollector(500, 100, 150);
+    collector.append('START_CONFIG_OPTIONS_LOADED: mode=production\n');
+    for (let i = 0; i < 50; i++) {
+      collector.append(`intermediate verbose compilation log line ${i}\n`);
+    }
+    collector.append('FINAL_TEST_SUMMARY: 100 tests passed, 0 failures\n');
+
+    const result = collector.toString();
+    assert.ok(result.includes('START_CONFIG_OPTIONS_LOADED'));
+    assert.ok(result.includes('FINAL_TEST_SUMMARY: 100 tests passed, 0 failures'));
+    assert.ok(result.includes('Middle output stream collapsed'));
   });
 });

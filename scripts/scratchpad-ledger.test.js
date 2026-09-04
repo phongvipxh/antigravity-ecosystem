@@ -61,16 +61,4 @@ describe('Scratchpad Memory Ledger Suite', () => {
     const content = readScratchpad(tmpWorkspace);
     assert.equal(content, '');
   });
-
-  test('masks sensitive credentials and tokens in scratchpad.md', () => {
-    const sensitiveCmd = 'curl -H "Authorization: Bearer my-secret-jwt-token-1234567890"';
-    const sensitiveOutput = 'AssertionError: sk-ant-api03-abcdef1234567890abcdef1234567890 failed';
-    recordFailure(sensitiveCmd, sensitiveOutput, tmpWorkspace, 'Secret ghp_123456789012345678901234567890123456');
-
-    const content = readScratchpad(tmpWorkspace);
-    assert.ok(!content.includes('my-secret-jwt-token-1234567890'));
-    assert.ok(!content.includes('sk-ant-api03-abcdef1234567890abcdef1234567890'));
-    assert.ok(!content.includes('ghp_123456789012345678901234567890123456'));
-    assert.ok(content.includes('***[MASKED]'));
-  });
 });

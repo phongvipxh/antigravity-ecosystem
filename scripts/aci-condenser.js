@@ -157,6 +157,46 @@ function condenseOutput(rawOutput, exitCode = 0, command = '', durationMs = 0) {
   }
 }
 
+class HeadTailCollector {
+  constructor(maxTotalBytes = 15 * 1024 * 1024, headBytes = 1 * 1024 * 1024, tailBytes = 4 * 1024 * 1024) {
+    this.maxTotalBytes = maxTotalBytes;
+    this.headBytes = headBytes;
+    this.tailBytes = tailBytes;
+    this.head = '';
+    this.tail = '';
+    this.totalBytes = 0;
+    this.isTruncated = false;
+  }
+
+  append(chunkStr) {
+    this.totalBytes += chunkStr.length;
+    if (this.totalBytes <= this.maxTotalBytes) {
+      this.head += chunkStr;
+    } else {
+      if (!this.isTruncated) {
+        this.isTruncated = true;
+        this.tail = this.head.slice(this.headBytes);
+        this.head = this.head.slice(0, this.headBytes);
+      }
+      this.tail += chunkStr;
+      if (this.tail.length > this.tailBytes) {
+        this.tail = this.tail.slice(-this.tailBytes);
+      }
+    }
+  }
+
+  toString() {
+    if (!this.isTruncated) {
+      return this.head;
+    }
+    return (
+      this.head +
+      '\n\n[ACI: ... Middle output stream collapsed; initial context and final test summary/diagnostics preserved ...]\n\n' +
+      this.tail
+    );
+  }
+}
+
 function runCondensed(commandArgs, options = {}) {
   return new Promise((resolve) => {
     const startTime = Date.now();
@@ -169,33 +209,20 @@ function runCondensed(commandArgs, options = {}) {
       stdio: ['inherit', 'pipe', 'pipe']
     });
 
-    const MAX_OUTPUT_BUFFER_BYTES = 5 * 1024 * 1024; // 5MB stream guard
-    let stdoutBuffer = '';
-    let stderrBuffer = '';
-    let stdoutCapped = false;
-    let stderrCapped = false;
+    const stdoutCollector = new HeadTailCollector();
+    const stderrCollector = new HeadTailCollector();
 
     child.stdout.on('data', (chunk) => {
-      if (stdoutBuffer.length < MAX_OUTPUT_BUFFER_BYTES) {
-        stdoutBuffer += chunk.toString();
-      } else if (!stdoutCapped) {
-        stdoutBuffer += '\n[ACI: STDOUT STREAM EXCEEDED 5MB - TRUNCATED TO PREVENT MEMORY SPIKE]\n';
-        stdoutCapped = true;
-      }
+      stdoutCollector.append(chunk.toString());
     });
 
     child.stderr.on('data', (chunk) => {
-      if (stderrBuffer.length < MAX_OUTPUT_BUFFER_BYTES) {
-        stderrBuffer += chunk.toString();
-      } else if (!stderrCapped) {
-        stderrBuffer += '\n[ACI: STDERR STREAM EXCEEDED 5MB - TRUNCATED TO PREVENT MEMORY SPIKE]\n';
-        stderrCapped = true;
-      }
+      stderrCollector.append(chunk.toString());
     });
 
     child.on('close', (code) => {
       const durationMs = Date.now() - startTime;
-      const combinedOutput = (stdoutBuffer + '\n' + stderrBuffer).trim();
+      const combinedOutput = (stdoutCollector.toString() + '\n' + stderrCollector.toString()).trim();
       const exitCode = code === null ? 1 : code;
       let condensed = condenseOutput(combinedOutput, exitCode, commandStr, durationMs);
       const workspaceDir = options.cwd || process.cwd();
@@ -298,5 +325,6 @@ module.exports = {
   extractSummary,
   extractFailureDiagnostics,
   condenseOutput,
-  runCondensed
+  runCondensed,
+  HeadTailCollector
 };
