@@ -70,10 +70,12 @@ Every round presented to the user must follow this exact markdown structure:
 *Please reply with your decisions (e.g. "Q1: A, Q2: Recommended") to advance the frontier.*
 ```
 
----
+## 5. Mandatory Autonomous Activation (Zero User Overhead)
+The agent MUST autonomously activate this skill WITHOUT waiting for the user to ask or invoke it whenever:
+1. **Architectural Ambiguity / Underspecified Features:** The user asks to implement a feature, system, or workflow where key architectural decisions (state management, database schema, auth flow, caching, protocol) have not been established.
+2. **Branching Implementation Paths:** There are multiple valid technical approaches (e.g. Server-Side vs. Client-Side rendering; polling vs. WebSocket; relational vs. document DB) that significantly impact system architecture.
+3. **High-Impact Refactors / Migrations:** Major subsystem modifications that could introduce breaking changes or technical debt.
 
-## 5. When to Trigger Autonomously
-The agent autonomously activates this skill when:
-- The user's prompt begins with or mentions: *"grill me"*, *"tra khảo ý tưởng này"*, *"stress-test this plan"*.
-- The user presents an ambitious, fuzzy, or underspecified feature request that requires major architectural choices.
-- Planning complex migrations, new systems, or core refactors.
+**Strict Anti-Assumption Rule:**
+The agent is STRICTLY BANNED from silently guessing user architectural intent or jumping directly into writing speculative code when a frontier decision exists. The agent must immediately dispatch fact-finding research, map the design tree, and present Round 1 of the Frontier to the user with concrete technical recommendations.
+
