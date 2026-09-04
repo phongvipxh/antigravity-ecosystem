@@ -428,7 +428,15 @@ function formatReport(report) {
 function applyFixes(repoRoot) {
   console.log('\n[APPLYING AUTOMATED FIXES]');
   const isWindows = process.platform === 'win32';
-  const installCmd = isWindows ? 'pwsh -File install.ps1' : 'bash install.sh';
+  let installCmd = 'bash install.sh';
+  if (isWindows) {
+    try {
+      execSync('pwsh -v', { stdio: 'pipe' });
+      installCmd = 'pwsh -ExecutionPolicy Bypass -File install.ps1';
+    } catch {
+      installCmd = 'powershell -ExecutionPolicy Bypass -File install.ps1';
+    }
+  }
 
   try {
     console.log(`1. Resynchronizing all rules, skills, and configs via ${installCmd}...`);

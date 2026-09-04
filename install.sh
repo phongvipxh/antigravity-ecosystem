@@ -34,9 +34,10 @@ fi
 
 # 6. Synchronize to .agents Workspace Layer (Antigravity IDE & CLI Priority)
 echo -e "\n[IDE Layer] Syncing to .agents for Antigravity IDE..."
-mkdir -p "$HOME/.agents/rules" "$HOME/.agents/skills"
+mkdir -p "$HOME/.agents/rules" "$HOME/.agents/skills" "$HOME/.agents/scripts"
 cp -R rules/* "$HOME/.agents/rules/"
 cp -R skills/* "$HOME/.agents/skills/"
+cp -R scripts/* "$HOME/.agents/scripts/"
 
 # 7. Cross-platform sync
 echo -e "[Cross-Platform] Syncing root GEMINI.md, AGENTS.md, CLAUDE.md, .cursorrules..."

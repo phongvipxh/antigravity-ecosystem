@@ -40,10 +40,13 @@ Write-Host "`n[IDE Layer] Syncing to .agents for Antigravity IDE..." -Foreground
 $AGENTS_DIR = Join-Path $HOME_DIR ".agents"
 $AGENTS_RULES = Join-Path $AGENTS_DIR "rules"
 $AGENTS_SKILLS = Join-Path $AGENTS_DIR "skills"
+$AGENTS_SCRIPTS = Join-Path $AGENTS_DIR "scripts"
 New-Item -ItemType Directory -Force -Path $AGENTS_RULES | Out-Null
 New-Item -ItemType Directory -Force -Path $AGENTS_SKILLS | Out-Null
+New-Item -ItemType Directory -Force -Path $AGENTS_SCRIPTS | Out-Null
 Copy-Item -Recurse -Force "rules\*" $AGENTS_RULES
 Copy-Item -Recurse -Force "skills\*" $AGENTS_SKILLS
+Copy-Item -Recurse -Force "scripts\*" $AGENTS_SCRIPTS
 
 # 7. Cross-platform sync
 Write-Host "[Cross-Platform] Syncing root GEMINI.md, AGENTS.md, CLAUDE.md, .cursorrules..." -ForegroundColor Yellow
