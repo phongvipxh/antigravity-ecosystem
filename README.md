@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platform: Cross-Platform](https://img.shields.io/badge/Platform-Antigravity%20%7C%20Claude%20%7C%20Cursor%20%7C%20Copilot-black)](README.md)
 [![Skills: 17 Active](https://img.shields.io/badge/Skills-17%20Active-emerald)](skills/)
-[![Rules: 9 Core](https://img.shields.io/badge/Rules-9%20Core%20%28100%25%20Spec%29-indigo)](rules/)
+[![Rules: 10 Core](https://img.shields.io/badge/Rules-10%20Core%20%28100%25%20Spec%29-indigo)](rules/)
 
 > **The definitive production-grade agentic AI engineering framework.** A unified configuration suite empowering AI coding agents with staff-level software architecture, anti-hallucination guardrails, autonomous tool orchestration, and award-winning frontend aesthetics.
 
@@ -15,7 +15,7 @@ This repository contains the complete personal configuration, behavioral invaria
 
 ```text
 antigravity-ecosystem/
-├── rules/                  # 9 System Behavioral Directives (100% Full Specification)
+├── rules/                  # 10 System Behavioral Directives (100% Full Specification)
 ├── skills/                 # 17 Autonomous Specialized Capabilities
 ├── mcp/                    # Model Context Protocol (MCP) servers & tool schemas
 ├── cross-platform/         # Single-source-of-truth prompts (CLAUDE.md, .cursorrules)
@@ -25,7 +25,7 @@ antigravity-ecosystem/
 
 ---
 
-## 📜 1. The 9 Core Invariant Rules (`rules/`)
+## 📜 1. The 10 Core Invariant Rules (`rules/`)
 
 Each rule enforces a non-negotiable standard of cognitive rigor, safety, and correctness:
 
@@ -40,6 +40,7 @@ Each rule enforces a non-negotiable standard of cognitive rigor, safety, and cor
 | **07** | **Invisible Autonomous Tool Orchestration** | Zero user cognitive overhead; autonomously triggers the exact skill matching user intent. |
 | **08** | **Gemini Precision & Anti-Lazy Coding** | Full implementation enforcement; bans `// TODO` or placeholder code. |
 | **09** | **Harness Engineering & Session Continuity** | Maintains conversational transcripts, durable memory, and cross-session resume. |
+| **10** | **Advanced Harness & Trajectory Search** | Multi-path Best-of-N trajectory search, progressive context compaction, blast-radius safety guard, and reactive hooks. |
 
 ---
 
@@ -113,3 +114,4 @@ chmod +x install.sh
 ## 📄 License
 
 Distributed under the **MIT License**. See [LICENSE](LICENSE) for details.
+

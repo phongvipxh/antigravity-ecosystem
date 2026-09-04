@@ -16,7 +16,7 @@ New-Item -ItemType Directory -Force -Path $GEMINI_RULES | Out-Null
 New-Item -ItemType Directory -Force -Path $GEMINI_SKILLS | Out-Null
 
 # 2. Copy Rules
-Write-Host "[2/4] Deploying 9 Master Rules..." -ForegroundColor Yellow
+Write-Host "[2/4] Deploying 10 Master Rules..." -ForegroundColor Yellow
 Copy-Item -Recurse -Force "rules\*" $GEMINI_RULES
 
 # 3. Copy Skills
@@ -43,3 +43,4 @@ if (Test-Path "cross-platform\.cursorrules") {
 Write-Host "`n==================================================" -ForegroundColor Green
 Write-Host "  Deployment Successful! All rules & skills active. " -ForegroundColor Green
 Write-Host "==================================================" -ForegroundColor Green
+

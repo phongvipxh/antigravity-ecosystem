@@ -14,7 +14,7 @@ echo -e "\n[1/4] Preparing directories..."
 mkdir -p "$GEMINI_RULES" "$GEMINI_SKILLS" "$HOME/.claude"
 
 # 2. Copy Rules
-echo "[2/4] Deploying 9 Master Rules..."
+echo "[2/4] Deploying 10 Master Rules..."
 cp -R rules/* "$GEMINI_RULES/"
 
 # 3. Copy Skills
@@ -39,3 +39,4 @@ fi
 echo "=================================================="
 echo "  Deployment Successful! All rules & skills active. "
 echo "=================================================="
+
