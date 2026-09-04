@@ -86,6 +86,12 @@
 ## 2. State Synchronization
 - Update state documentation upon completing verifiable execution checkpoints. Ensure any subsequent agent or developer can instantly resume work without context loss.
 
+## 3. Cross-Session Reflection Ledger (`lessons.jsonl`)
+- Persist verified solutions from resolved debugging loops into `~/.gemini/config/lessons.jsonl` (global) and `.agents/lessons.jsonl` (project).
+- Automatically recall prior solutions on matching error signatures to avoid re-solving known issues across sessions.
+- Automatically distill lessons when scratchpad failure states resolve to mechanical Exit Code 0.
+
+
 
 ---
 
@@ -217,6 +223,20 @@
   - Logs failure signatures, attempted patches, and eliminated hypotheses.
   - Strictly prohibits the agent from re-attempting identical broken trajectories.
   - Automatically verifies and archives resolution upon achieving mechanical Exit Code 0.
+
+## 14. Cross-Session Reflection Ledger & Experience Memory
+- Implements Reflexion-style cross-session learning via `scripts/lessons-ledger.js`:
+  - **Automated Lesson Recall:** On test failure, query previous verified solutions across all projects and inject relevant fixes.
+  - **Automated Lesson Distillation:** On achieving mechanical Exit Code 0 after debugging failures, automatically distill the verified resolution into persistent experience memory (`lessons.jsonl`).
+
+## 15. Adaptive Test-Time Compute (TTC) Allocation
+- Compute budget is dynamically calibrated via `scripts/ttc-profiler.js` across 5 Complexity Tiers:
+  - **Tier 1 (Fast Path):** Typos, formatting, docs -> 0 subagents, max 2 turns, direct surgical edit.
+  - **Tier 2 (Single-Component):** Helper logic, unit tests -> 0 subagents, max 4 turns, TDD cycle.
+  - **Tier 3 (Multi-File Integration):** Features, API endpoints -> max 1 subagent, max 8 turns, Scratchpad Ledger active.
+  - **Tier 4 (Architectural Refactor):** Migrations, breaking changes -> max 2 subagents, max 15 turns, Git Micro-Checkpoints + Dual-Agent Audit.
+  - **Tier 5 (Concurrency & Benchmark):** Race conditions, distributed state -> max 3 subagents, max 25 turns, Dynamic Ephemeral Harness + Best-of-N Trajectory Search.
+
 
 
 

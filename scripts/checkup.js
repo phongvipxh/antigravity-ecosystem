@@ -289,6 +289,27 @@ function auditHarnessTools(repoDir) {
     result.details.push(`Hypothesis Scratchpad Ledger: Missing at ${scratchpadPath}`);
   }
 
+  const lessonsPath = path.join(scriptsDir, 'lessons-ledger.js');
+  if (fs.existsSync(lessonsPath)) {
+    result.details.push('Cross-Session Reflection Ledger: Installed and ready');
+    try {
+      const { readLessons } = require(lessonsPath);
+      const totalLessons = readLessons({ workspaceDir: repoDir || process.cwd() });
+      result.details.push(`Remembered Experience Lessons: ${totalLessons.length} stored`);
+    } catch {}
+  } else {
+    result.status = 'WARN';
+    result.details.push(`Cross-Session Reflection Ledger: Missing at ${lessonsPath}`);
+  }
+
+  const ttcPath = path.join(scriptsDir, 'ttc-profiler.js');
+  if (fs.existsSync(ttcPath)) {
+    result.details.push('Adaptive TTC Compute Profiler: Installed and ready');
+  } else {
+    result.status = 'WARN';
+    result.details.push(`Adaptive TTC Compute Profiler: Missing at ${ttcPath}`);
+  }
+
   return result;
 }
 

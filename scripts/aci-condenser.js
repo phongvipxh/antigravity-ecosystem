@@ -206,6 +206,19 @@ function runCondensed(commandArgs, options = {}) {
         }
       } catch {}
 
+      // Automated Cross-Session Reflection Ledger: Recall on Failure, Distill on Resolution
+      try {
+        const { queryLessons, formatLessonAdvice, distillFromScratchpad } = require('./lessons-ledger');
+        if (exitCode !== 0) {
+          const matchingLessons = queryLessons(combinedOutput, { workspaceDir, limit: 2 });
+          if (matchingLessons.length > 0) {
+            condensed += '\n\n' + formatLessonAdvice(matchingLessons);
+          }
+        } else {
+          distillFromScratchpad(workspaceDir);
+        }
+      } catch {}
+
       resolve({
         exitCode,
         durationMs,
@@ -222,6 +235,14 @@ function runCondensed(commandArgs, options = {}) {
       try {
         const { recordFailure } = require('./scratchpad-ledger');
         recordFailure(commandStr, err.message, workspaceDir);
+      } catch {}
+
+      try {
+        const { queryLessons, formatLessonAdvice } = require('./lessons-ledger');
+        const matchingLessons = queryLessons(err.message, { workspaceDir, limit: 1 });
+        if (matchingLessons.length > 0) {
+          condensed += '\n\n' + formatLessonAdvice(matchingLessons);
+        }
       } catch {}
 
       resolve({

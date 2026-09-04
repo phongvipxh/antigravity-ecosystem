@@ -80,7 +80,23 @@ Skills extend the agent with domain-specific algorithms, design tokens, and auto
 
 ---
 
-## 🔌 3. Model Context Protocol (MCP) Integration (`mcp/`)
+## 🛠️ 3. Harness Engineering Execution Plane (`scripts/`)
+
+The harness execution layer transforms the agent from a passive model into an active, self-correcting operating system:
+
+| Tool | Capability | Automated Trigger |
+| :--- | :--- | :--- |
+| **`aci-condenser.js`** | **ACI Terminal Condenser** | Automatically intercepts command streams, strips ANSI noise, collapses passes by 85%, and isolates failure stacktraces. |
+| **`git-checkpoint.js`** | **Atomic Micro-Checkpointing** | Creates isolated git refs (`refs/checkpoints/...`) before mutations for single-step atomic rollbacks. |
+| **`checkup.js`** | **System Diagnostics & Tune-up** | Audits token budget (<6k tokens), rule drift across 3 tiers, MCP health, and secret leaks (`--fix`). |
+| **`loop-breaker.js`** | **Anti-Loop Circuit Breaker** | Tracks Jaccard similarity across command failures; halts runaway failure loops after 3 consecutive failures. |
+| **`scratchpad-ledger.js`** | **Hypothesis Scratchpad Buffer** | Records eliminated hypotheses in `.agents/scratchpad.md`; prevents re-trying failed approaches. |
+| **`lessons-ledger.js`** | **Cross-Session Reflection Ledger** | Recalls prior verified solutions on matching error signatures; auto-distills resolutions into `lessons.jsonl`. |
+| **`ttc-profiler.js`** | **Adaptive TTC Compute Profiler** | Dynamically classifies task complexity into 5 Tiers and assigns precise subagent, turn, and timeout budgets. |
+
+---
+
+## 🔌 4. Model Context Protocol (MCP) Integration (`mcp/`)
 
 Pre-configured servers providing tool integrations via standard JSON-RPC:
 
@@ -91,7 +107,7 @@ Pre-configured servers providing tool integrations via standard JSON-RPC:
 
 ---
 
-## 🚀 4. Quickstart: 1-Click Deployment
+## 🚀 5. Quickstart: 1-Click Deployment
 
 ### Windows (PowerShell)
 ```powershell
