@@ -148,10 +148,10 @@ function condenseOutput(rawOutput, exitCode = 0, command = '', durationMs = 0) {
     ];
     return result.join('\n');
   } else {
-    // ASYMMETRIC HANDLING: Full Diagnostic Fidelity on Failures
+    // ASYMMETRIC HANDLING: Full Diagnostic Fidelity on Failures (Rule 04 Compliance)
     // Error logs are high-value ground truth (diffs, assertion mismatches, compiler carets).
-    // Preserve 100% of the diagnostics without arbitrary truncation or regex filtering.
-    if (totalLines <= 800) {
+    // Under Rule 04: Token Economy is Lowest Priority. Preserve 100% of all diagnostics.
+    if (totalLines <= 5000) {
       const result = [
         `[ACI: FAILURE] Command: "${command}" | Exit: ${exitCode} | Duration: ${durationMs}ms | Lines: ${totalLines}`,
         '--- FULL FAILURE DIAGNOSTICS ---',
@@ -161,15 +161,15 @@ function condenseOutput(rawOutput, exitCode = 0, command = '', durationMs = 0) {
       return result.join('\n');
     }
 
-    // Runaway Infinite Loop Flood Protection (> 800 lines):
-    // Retain generous 350-line Head + 350-line Tail, collapsing only the repetitive middle flood.
+    // Runaway Infinite Loop Flood Protection (abnormal stream > 5000 lines):
+    // Retain generous 2000-line Head + 2000-line Tail, collapsing only the repetitive middle flood.
     const result = [
       `[ACI: FAILURE (RUNAWAY LOG DETECTED)] Command: "${command}" | Exit: ${exitCode} | Duration: ${durationMs}ms | Total Lines: ${totalLines}`,
-      '--- HEAD DIAGNOSTICS (First 350 lines) ---',
-      ...filteredLines.slice(0, 350),
-      `--- [COLLAPSED ${totalLines - 700} REPETITIVE LOG LINES (Infinite loop or flood guard)] ---`,
-      '--- TAIL DIAGNOSTICS (Last 350 lines) ---',
-      ...filteredLines.slice(-350),
+      '--- HEAD DIAGNOSTICS (First 2000 lines) ---',
+      ...filteredLines.slice(0, 2000),
+      `--- [COLLAPSED ${totalLines - 4000} REPETITIVE LOG LINES (Infinite loop or flood guard)] ---`,
+      '--- TAIL DIAGNOSTICS (Last 2000 lines) ---',
+      ...filteredLines.slice(-2000),
       '--- END DIAGNOSTICS ---'
     ];
     return result.join('\n');

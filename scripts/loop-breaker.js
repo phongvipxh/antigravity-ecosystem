@@ -86,15 +86,18 @@ function clearLedger(workspaceDir = process.cwd()) {
 function recordExecution(command, output, exitCode, workspaceDir = process.cwd()) {
   const ledger = readLedger(workspaceDir);
   const trimmedCmd = (command || '').trim();
-  const trimmedOutput = (output || '').slice(0, 1500).trim();
-  const outputHash = crypto.createHash('sha256').update(trimmedOutput).digest('hex').slice(0, 16);
+  const cleanOutput = (output || '').trim();
+  const diagnosticSnippet = cleanOutput.length > 5000
+    ? cleanOutput.slice(0, 2500) + '\n...\n' + cleanOutput.slice(-2500)
+    : cleanOutput;
+  const outputHash = crypto.createHash('sha256').update(cleanOutput).digest('hex').slice(0, 16);
 
   const entry = {
     timestamp: Date.now(),
     command: trimmedCmd,
     exitCode: exitCode || 0,
     outputHash,
-    snippet: trimmedOutput.slice(0, 300)
+    snippet: diagnosticSnippet
   };
 
   ledger.history.push(entry);
@@ -103,7 +106,7 @@ function recordExecution(command, output, exitCode, workspaceDir = process.cwd()
   }
 
   saveLedger(ledger, workspaceDir);
-  return checkLoopState(workspaceDir, trimmedOutput);
+  return checkLoopState(workspaceDir, cleanOutput);
 }
 
 function checkLoopState(workspaceDir = process.cwd(), currentOutput = '') {

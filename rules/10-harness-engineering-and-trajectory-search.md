@@ -41,11 +41,11 @@
 - **On Architecture Request:** Autonomously route to `archify` with appropriate visual preset (`blueprint`, `editorial`, `classic`).
 - **On Pre-Commit:** Run automated secret scanning for API keys, tokens, and credentials.
 
-## 9. ACI Terminal Output Condensation (Princeton SWE-agent Standard)
-- Raw terminal streams pollute the attention window with ANSI escape sequences, spinner rewrites, and hundreds of build lines.
+## 9. ACI Terminal Output Condensation & Full Failure Fidelity
+- Raw terminal streams pollute the attention window with ANSI escape sequences, spinner rewrites, and hundreds of repetitive build lines.
 - Wrap execution commands with `scripts/aci-condenser.js`:
-  - **Success (`exit 0`):** Automatically collapse verbose passes into high-signal telemetry and summary metrics.
-  - **Failure (`exit != 0`):** Surgically extract only the core stacktrace and assertion failure lines (saving 80–90% token budget).
+  - **Success (`exit 0`):** Automatically collapse verbose passes into high-signal telemetry and summary metrics (hiding mundane build and download noise).
+  - **Failure (`exit != 0`):** Preserve 100% full diagnostic fidelity (Rule 04 Compliance). Deliver the complete, unadulterated failure output—including all assertion diffs, compiler notes, and visual carets—without arbitrary line cuts or token-saving truncations. Only guard against abnormal infinite-loop stream floods.
 
 ## 10. Ephemeral Micro-Checkpointing & Atomic Rollback
 - Never perform risky multi-file refactors without an atomic recovery anchor.

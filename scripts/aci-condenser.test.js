@@ -128,19 +128,30 @@ describe('ACI Terminal Condenser Suite', () => {
     assert.ok(res.includes('test/api.test.js:45:10'));
   });
 
-  test('condenseOutput collapses middle lines only when failure log is a massive runaway flood (> 800 lines)', () => {
+  test('condenseOutput collapses middle lines only when failure log is an extreme runaway flood (> 5000 lines)', () => {
     const floodLines = [];
     floodLines.push('FIRST_ERROR: line 1 failed');
-    for (let i = 2; i <= 900; i++) {
+    for (let i = 2; i <= 5200; i++) {
       floodLines.push(`Repeated spam line ${i}`);
     }
-    floodLines.push('FINAL_ERROR: line 901 failed');
+    floodLines.push('FINAL_ERROR: line 5201 failed');
 
     const res = condenseOutput(floodLines.join('\n'), 1, 'node broken.js', 1000);
     assert.ok(res.includes('[ACI: FAILURE (RUNAWAY LOG DETECTED)]'));
     assert.ok(res.includes('FIRST_ERROR: line 1 failed'));
-    assert.ok(res.includes('FINAL_ERROR: line 901 failed'));
+    assert.ok(res.includes('FINAL_ERROR: line 5201 failed'));
     assert.ok(res.includes('COLLAPSED'));
     assert.ok(res.includes('Infinite loop or flood guard'));
+  });
+
+  test('condenseOutput preserves 100% of large 1500-line failure logs without collapsing', () => {
+    const largeLines = [];
+    for (let i = 1; i <= 1500; i++) {
+      largeLines.push(`Assertion Failure #${i}: line detail`);
+    }
+    const res = condenseOutput(largeLines.join('\n'), 1, 'npm test', 2000);
+    assert.ok(res.includes('--- FULL FAILURE DIAGNOSTICS ---'));
+    assert.ok(res.includes('Assertion Failure #750: line detail'), 'Middle lines must not be collapsed');
+    assert.ok(!res.includes('COLLAPSED'));
   });
 });

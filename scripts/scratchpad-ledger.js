@@ -48,12 +48,13 @@ function extractFailureCore(rawOutput) {
 
   for (const line of lines) {
     if (/(?:Error|Exception|AssertionError|FAIL|FAILED):/i.test(line)) {
-      return line.slice(0, 180);
+      return line.length > 2000 ? line.slice(0, 2000) + '... [truncated long line]' : line;
     }
   }
 
   // Fallback to first non-empty line
-  return lines[0] ? lines[0].slice(0, 180) : 'Non-zero exit code';
+  if (!lines[0]) return 'Non-zero exit code';
+  return lines[0].length > 2000 ? lines[0].slice(0, 2000) + '... [truncated long line]' : lines[0];
 }
 
 function recordFailure(command, rawOutput, workspaceDir = process.cwd(), notes = '') {
