@@ -16,8 +16,8 @@ This repository contains the complete personal configuration, behavioral invaria
 ```text
 antigravity-ecosystem/
 ├── rules/                  # 10 System Behavioral Directives (100% Full Specification)
-├── skills/                 # 19 Autonomous Specialized Capabilities
-├── scripts/                # Harness engineering tools (ACI condenser, Git micro-checkpointing)
+├── skills/                 # 20 Autonomous Specialized Capabilities
+├── scripts/                # Harness tools (ACI condenser, Git checkpointing, System checkup)
 ├── mcp/                    # Model Context Protocol (MCP) servers & tool schemas
 ├── cross-platform/         # Single-source-of-truth prompts (CLAUDE.md, .cursorrules)
 ├── install.ps1             # 1-Click deployment script for Windows
@@ -45,7 +45,7 @@ Each rule enforces a non-negotiable standard of cognitive rigor, safety, and cor
 
 ---
 
-## ⚡ 2. The 19 Specialized Skills (`skills/`)
+## ⚡ 2. The 20 Specialized Skills (`skills/`)
 
 Skills extend the agent with domain-specific algorithms, design tokens, and automation tools:
 
@@ -67,6 +67,7 @@ Skills extend the agent with domain-specific algorithms, design tokens, and auto
 - **`browser-search`**: Multi-engine real-time web research (SearXNG + Camofox + CloakBrowser).
 
 ### 🧪 Testing, Debugging & Reliability
+- **`system-checkup`**: Diagnostic health and tune-up engine inspired by Claude Code `/checkup` and `/doctor`. Audits context token budget, dead weight, rule drift across 3 tiers, MCP health, and secret leaks with automated `--fix`.
 - **`dual-agent-auditor`**: Adversarial verification loop breaking self-grading confirmation bias. An independent auditor subagent stresses git diffs with adversarial edge cases and fuzz tests before final sign-off.
 - **`dynamic-harness-runner`**: Authors and executes task-specific ephemeral test harnesses on-the-fly (Claude Code dynamic workflows & Codex Core execution plane pattern) for multi-candidate tournaments, bounded sweeps, and trajectory sampling.
 - **`systematic-debugging`**: 4-stage root-cause isolation protocol adapted from Claude Code and Roo-Code.

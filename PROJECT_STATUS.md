@@ -18,15 +18,18 @@
 
 ---
 
-## 2. Autonomous Skills Matrix (19 Skills)
+## 2. Autonomous Skills Matrix (20 Skills)
 - Located in: `skills/` and `~/.gemini/config/skills/`
 - Newly Integrated:
+  - **`system-checkup`**: Diagnostic health and tune-up engine inspired by Claude Code `/checkup` and `/doctor`. Audits context token budget, dead weight, rule drift across 3 tiers, MCP health, and secret leaks with automated `--fix`.
   - **`dual-agent-auditor`**: Spawns isolated auditor subagent armed only with git diffs and specs to probe concurrency, boundary values, and fuzzing.
   - **`dynamic-harness-runner`**: Synthesizes ephemeral runner scripts in `scratch/` for multi-candidate tournaments, bounded sweeps, and trajectory sampling.
 
 ---
 
 ## 3. Harness Engineering Tooling (`scripts/`)
+- `scripts/checkup.js`: System health diagnostic & auto-tuneup engine (Claude Code `/checkup` & `/doctor` standard).
+- `scripts/checkup.test.js`: Automated unit test suite (7 tests passing, Exit Code 0).
 - `scripts/aci-condenser.js`: ACI CLI and Node module for terminal stream condensation (80-90% token reduction).
 - `scripts/aci-condenser.test.js`: Automated unit test suite (8 tests passing, Exit Code 0).
 - `scripts/git-checkpoint.js`: Atomic transactional git checkpointing and rollback engine.
@@ -35,10 +38,12 @@
 ---
 
 ## 4. Mechanical Verification History
-- `node scripts/aci-condenser.js -- node --test scripts/aci-condenser.test.js scripts/git-checkpoint.test.js`
+- `node scripts/aci-condenser.js -- node --test scripts/aci-condenser.test.js scripts/git-checkpoint.test.js scripts/checkup.test.js`
   - **Exit Code:** `0`
-  - **Total Tests:** 12 passed, 0 failed.
-  - **Telemetry Duration:** ~1.4s.
+  - **Total Tests:** 19 passed, 0 failed across 3 test suites.
+  - **Telemetry Duration:** ~1.8s.
+- `node scripts/checkup.js`
+  - **Overall Health Status:** `[PASS]` (Context budget, 0 rule drift, 20 skills valid, MCP servers ready, 0 secret leaks).
 
 ---
 

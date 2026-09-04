@@ -19,4 +19,5 @@
 - Truncation prevention / Exhaustive unabridged output -> 'full-output-enforcement'.
 - Living project state & memory bank synchronization -> 'project-state-manager'.
 - Upgrading legacy or generic AI designs -> 'redesign-existing-projects'.
+- Environment audit / Configuration health & token budget checkup -> 'system-checkup'.
 
