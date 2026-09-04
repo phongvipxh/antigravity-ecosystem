@@ -20,7 +20,7 @@ Write-Host "[2/4] Deploying 10 Master Rules..." -ForegroundColor Yellow
 Copy-Item -Recurse -Force "rules\*" $GEMINI_RULES
 
 # 3. Copy Skills
-Write-Host "[3/4] Deploying 17 Autonomous Skills..." -ForegroundColor Yellow
+Write-Host "[3/4] Deploying 18 Autonomous Skills..." -ForegroundColor Yellow
 Copy-Item -Recurse -Force "skills\*" $GEMINI_SKILLS
 
 # 4. Copy MCP Configuration
@@ -43,4 +43,5 @@ if (Test-Path "cross-platform\.cursorrules") {
 Write-Host "`n==================================================" -ForegroundColor Green
 Write-Host "  Deployment Successful! All rules & skills active. " -ForegroundColor Green
 Write-Host "==================================================" -ForegroundColor Green
+
 

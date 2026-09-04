@@ -18,7 +18,7 @@ echo "[2/4] Deploying 10 Master Rules..."
 cp -R rules/* "$GEMINI_RULES/"
 
 # 3. Copy Skills
-echo "[3/4] Deploying 17 Autonomous Skills..."
+echo "[3/4] Deploying 18 Autonomous Skills..."
 cp -R skills/* "$GEMINI_SKILLS/"
 
 # 4. Copy MCP Configuration
@@ -39,4 +39,5 @@ fi
 echo "=================================================="
 echo "  Deployment Successful! All rules & skills active. "
 echo "=================================================="
+
 
