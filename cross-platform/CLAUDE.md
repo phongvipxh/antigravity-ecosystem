@@ -92,13 +92,19 @@
 
 ## 2. Intent-to-Skill Routing Matrix
 - Web search / Real-time research / Dynamic scraping -> 'browser-search' (SearXNG + Camofox + CloakBrowser).
-- Frontend UI / Landing pages / Audits / Redesigns -> 'hallmark' / 'design-taste-frontend' / 'high-end-visual-design' / 'impeccable'.
+- Frontend UI / Greenfield landing pages / UX Audits -> 'hallmark' / 'design-taste-frontend' / 'high-end-visual-design' / 'impeccable'.
 - Clean editorial interfaces -> 'minimalist-ui' | Swiss terminal print -> 'industrial-brutalist-ui'.
 - Full E2E testing / Browser automation -> 'playwright-testing-and-automation'.
-- Architecture / Sequence diagrams -> 'archify' / 'architecture-planner'.
+- Architecture / Sequence diagrams / Topology -> 'archify' / 'architecture-planner'.
 - Complex root-cause debugging -> 'systematic-debugging'.
-- Test-driven development -> 'test-driven-development'.
+- Test-driven development & regression suites -> 'test-driven-development'.
 - Zero hallucination pre-flight -> 'zero-hallucination-checker'.
+- Adversarial audit / Concurrency & race condition probing -> 'dual-agent-auditor'.
+- Multi-candidate tournaments / Dynamic test harnesses -> 'dynamic-harness-runner'.
+- Unfamiliar repository exploration / Exhaustive call graphs -> 'deep-codebase-researcher'.
+- Truncation prevention / Exhaustive unabridged output -> 'full-output-enforcement'.
+- Living project state & memory bank synchronization -> 'project-state-manager'.
+- Upgrading legacy or generic AI designs -> 'redesign-existing-projects'.
 
 
 ---
