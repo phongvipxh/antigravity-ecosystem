@@ -19,7 +19,7 @@ echo "[2/5] Deploying 10 Master Rules..."
 cp -R rules/* "$GEMINI_RULES/"
 
 # 3. Copy Skills
-echo "[3/5] Deploying 21 Autonomous Skills..."
+echo "[3/5] Deploying 22 Autonomous Skills..."
 cp -R skills/* "$GEMINI_SKILLS/"
 
 # 4. Copy Harness Engineering Scripts
@@ -30,6 +30,9 @@ cp -R scripts/* "$GEMINI_SCRIPTS/"
 echo "[5/5] Deploying MCP Servers..."
 if [ -f "mcp/mcp_config.json" ]; then
     cp -f mcp/mcp_config.json "$GEMINI_CONFIG/mcp_config.json"
+    if [ -d "$HOME/.cursor" ]; then
+        cp -f mcp/mcp_config.json "$HOME/.cursor/mcp.json"
+    fi
 fi
 
 # 6. Synchronize to .agents Workspace Layer (Antigravity IDE & CLI Priority)
@@ -38,6 +41,9 @@ mkdir -p "$HOME/.agents/rules" "$HOME/.agents/skills" "$HOME/.agents/scripts"
 cp -R rules/* "$HOME/.agents/rules/"
 cp -R skills/* "$HOME/.agents/skills/"
 cp -R scripts/* "$HOME/.agents/scripts/"
+if [ -f "mcp/mcp_config.json" ]; then
+    cp -f mcp/mcp_config.json "$HOME/.agents/mcp_config.json"
+fi
 
 # 7. Cross-platform sync
 echo -e "[Cross-Platform] Syncing root GEMINI.md, AGENTS.md, CLAUDE.md, .cursorrules..."

@@ -22,7 +22,7 @@ Write-Host "[2/5] Deploying 10 Master Rules..." -ForegroundColor Yellow
 Copy-Item -Recurse -Force "rules\*" $GEMINI_RULES
 
 # 3. Copy Skills
-Write-Host "[3/5] Deploying 21 Autonomous Skills..." -ForegroundColor Yellow
+Write-Host "[3/5] Deploying 22 Autonomous Skills..." -ForegroundColor Yellow
 Copy-Item -Recurse -Force "skills\*" $GEMINI_SKILLS
 
 # 4. Copy Harness Engineering Scripts
@@ -33,6 +33,10 @@ Copy-Item -Recurse -Force "scripts\*" $GEMINI_SCRIPTS
 Write-Host "[5/5] Deploying MCP Servers..." -ForegroundColor Yellow
 if (Test-Path "mcp\mcp_config.json") {
     Copy-Item -Force "mcp\mcp_config.json" (Join-Path $GEMINI_CONFIG "mcp_config.json")
+    $CURSOR_DIR = Join-Path $HOME_DIR ".cursor"
+    if (Test-Path $CURSOR_DIR) {
+        Copy-Item -Force "mcp\mcp_config.json" (Join-Path $CURSOR_DIR "mcp.json")
+    }
 }
 
 # 6. Synchronize to .agents Workspace Layer (Antigravity IDE & CLI Priority)
@@ -47,6 +51,9 @@ New-Item -ItemType Directory -Force -Path $AGENTS_SCRIPTS | Out-Null
 Copy-Item -Recurse -Force "rules\*" $AGENTS_RULES
 Copy-Item -Recurse -Force "skills\*" $AGENTS_SKILLS
 Copy-Item -Recurse -Force "scripts\*" $AGENTS_SCRIPTS
+if (Test-Path "mcp\mcp_config.json") {
+    Copy-Item -Force "mcp\mcp_config.json" (Join-Path $AGENTS_DIR "mcp_config.json")
+}
 
 # 7. Cross-platform sync
 Write-Host "[Cross-Platform] Syncing root GEMINI.md, AGENTS.md, CLAUDE.md, .cursorrules..." -ForegroundColor Yellow
