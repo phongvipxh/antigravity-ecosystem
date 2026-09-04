@@ -16,7 +16,7 @@ This repository contains the complete personal configuration, behavioral invaria
 ```text
 antigravity-ecosystem/
 ├── rules/                  # 10 System Behavioral Directives (100% Full Specification)
-├── skills/                 # 20 Autonomous Specialized Capabilities
+├── skills/                 # 21 Autonomous Specialized Capabilities
 ├── scripts/                # Harness tools (ACI condenser, Git checkpointing, System checkup)
 ├── mcp/                    # Model Context Protocol (MCP) servers & tool schemas
 ├── cross-platform/         # Single-source-of-truth prompts (CLAUDE.md, .cursorrules)
@@ -45,11 +45,12 @@ Each rule enforces a non-negotiable standard of cognitive rigor, safety, and cor
 
 ---
 
-## ⚡ 2. The 20 Specialized Skills (`skills/`)
+## ⚡ 2. The 21 Specialized Skills (`skills/`)
 
 Skills extend the agent with domain-specific algorithms, design tokens, and automation tools:
 
-### 📐 System Architecture & Diagrams
+### 📐 System Architecture, Planning & Interview
+- **`grilling`**: Matt Pocock design tree & frontier interview engine. Stress-tests ideas through structured decision rounds with recommendations while autonomously discovering codebase facts.
 - **`archify`**: Compiles standalone, interactive HTML architecture, sequence, and workflow diagrams with 9 deterministic artifact checks, dark/light themes, and real SVG brand badges.
 - **`architecture-planner`**: Architectural requirement decomposition, risk management, and multi-file initiative checkpoints.
 

@@ -20,4 +20,5 @@
 - Living project state & memory bank synchronization -> 'project-state-manager'.
 - Upgrading legacy or generic AI designs -> 'redesign-existing-projects'.
 - Environment audit / Configuration health & token budget checkup -> 'system-checkup'.
+- Interactive requirements interview / Design decision stress-testing -> 'grilling'.
 

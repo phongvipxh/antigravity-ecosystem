@@ -18,9 +18,10 @@
 
 ---
 
-## 2. Autonomous Skills Matrix (20 Skills)
+## 2. Autonomous Skills Matrix (21 Skills)
 - Located in: `skills/` and `~/.gemini/config/skills/`
 - Newly Integrated:
+  - **`grilling`**: Matt Pocock design tree & frontier interview engine. Relentlessly stress-tests ideas through structured decision rounds with recommendations while autonomously discovering codebase facts.
   - **`system-checkup`**: Diagnostic health and tune-up engine inspired by Claude Code `/checkup` and `/doctor`. Audits context token budget, dead weight, rule drift across 3 tiers, MCP health, and secret leaks with automated `--fix`.
   - **`dual-agent-auditor`**: Spawns isolated auditor subagent armed only with git diffs and specs to probe concurrency, boundary values, and fuzzing.
   - **`dynamic-harness-runner`**: Synthesizes ephemeral runner scripts in `scratch/` for multi-candidate tournaments, bounded sweeps, and trajectory sampling.

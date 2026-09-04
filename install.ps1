@@ -22,7 +22,7 @@ Write-Host "[2/5] Deploying 10 Master Rules..." -ForegroundColor Yellow
 Copy-Item -Recurse -Force "rules\*" $GEMINI_RULES
 
 # 3. Copy Skills
-Write-Host "[3/5] Deploying 20 Autonomous Skills..." -ForegroundColor Yellow
+Write-Host "[3/5] Deploying 21 Autonomous Skills..." -ForegroundColor Yellow
 Copy-Item -Recurse -Force "skills\*" $GEMINI_SKILLS
 
 # 4. Copy Harness Engineering Scripts

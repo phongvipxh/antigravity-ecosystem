@@ -19,7 +19,7 @@ echo "[2/5] Deploying 10 Master Rules..."
 cp -R rules/* "$GEMINI_RULES/"
 
 # 3. Copy Skills
-echo "[3/5] Deploying 20 Autonomous Skills..."
+echo "[3/5] Deploying 21 Autonomous Skills..."
 cp -R skills/* "$GEMINI_SKILLS/"
 
 # 4. Copy Harness Engineering Scripts
