@@ -35,8 +35,24 @@ if (Test-Path "mcp\mcp_config.json") {
     Copy-Item -Force "mcp\mcp_config.json" (Join-Path $GEMINI_CONFIG "mcp_config.json")
 }
 
-# Cross-platform sync
-Write-Host "`n[Bonus] Syncing cross-platform prompt files..." -ForegroundColor Yellow
+# 6. Synchronize to .agents Workspace Layer (Antigravity IDE & CLI Priority)
+Write-Host "`n[IDE Layer] Syncing to .agents for Antigravity IDE..." -ForegroundColor Yellow
+$AGENTS_DIR = Join-Path $HOME_DIR ".agents"
+$AGENTS_RULES = Join-Path $AGENTS_DIR "rules"
+$AGENTS_SKILLS = Join-Path $AGENTS_DIR "skills"
+New-Item -ItemType Directory -Force -Path $AGENTS_RULES | Out-Null
+New-Item -ItemType Directory -Force -Path $AGENTS_SKILLS | Out-Null
+Copy-Item -Recurse -Force "rules\*" $AGENTS_RULES
+Copy-Item -Recurse -Force "skills\*" $AGENTS_SKILLS
+
+# 7. Cross-platform sync
+Write-Host "[Cross-Platform] Syncing root GEMINI.md, AGENTS.md, CLAUDE.md, .cursorrules..." -ForegroundColor Yellow
+if (Test-Path "cross-platform\GEMINI.md") {
+    Copy-Item -Force "cross-platform\GEMINI.md" (Join-Path $HOME_DIR "GEMINI.md")
+}
+if (Test-Path "cross-platform\AGENTS.md") {
+    Copy-Item -Force "cross-platform\AGENTS.md" (Join-Path $HOME_DIR "AGENTS.md")
+}
 $CLAUDE_DIR = Join-Path $HOME_DIR ".claude"
 if (Test-Path "cross-platform\CLAUDE.md") {
     New-Item -ItemType Directory -Force -Path $CLAUDE_DIR | Out-Null
