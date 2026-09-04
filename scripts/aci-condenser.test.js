@@ -8,7 +8,8 @@ const {
   extractFailureDiagnostics,
   condenseOutput,
   runCondensed,
-  HeadTailCollector
+  HeadTailCollector,
+  formatCommandArg
 } = require('./aci-condenser.js');
 
 describe('ACI Terminal Condenser Suite', () => {
@@ -91,5 +92,13 @@ describe('ACI Terminal Condenser Suite', () => {
     assert.ok(result.includes('START_CONFIG_OPTIONS_LOADED'));
     assert.ok(result.includes('FINAL_TEST_SUMMARY: 100 tests passed, 0 failures'));
     assert.ok(result.includes('Middle output stream collapsed'));
+  });
+
+  test('formatCommandArg wraps arguments with spaces in quotes without double quoting', () => {
+    assert.equal(formatCommandArg('npm'), 'npm');
+    assert.equal(formatCommandArg('run test'), '"run test"');
+    assert.equal(formatCommandArg('"already quoted"'), '"already quoted"');
+    assert.equal(formatCommandArg("'single quoted'"), "'single quoted'");
+    assert.equal(formatCommandArg('-m Commit message with spaces'), '"-m Commit message with spaces"');
   });
 });

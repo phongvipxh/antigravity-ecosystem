@@ -87,7 +87,18 @@ function readJsonlFile(filePath) {
 function writeJsonlFile(filePath, entries) {
   ensureDirExists(filePath);
   const content = entries.map((entry) => JSON.stringify(entry)).join('\n') + (entries.length > 0 ? '\n' : '');
-  fs.writeFileSync(filePath, content, 'utf8');
+  try {
+    fs.writeFileSync(filePath, content, 'utf8');
+  } catch (err) {
+    // Windows file-locking recovery
+    if (err.code === 'EBUSY' || err.code === 'EPERM') {
+      try {
+        const tempPath = `${filePath}.${Date.now()}.tmp`;
+        fs.writeFileSync(tempPath, content, 'utf8');
+        fs.renameSync(tempPath, filePath);
+      } catch {}
+    }
+  }
 }
 
 function readLessons(options = {}) {

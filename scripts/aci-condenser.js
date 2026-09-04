@@ -197,10 +197,23 @@ class HeadTailCollector {
   }
 }
 
+function formatCommandArg(arg) {
+  if (typeof arg !== 'string') return '';
+  if ((arg.startsWith('"') && arg.endsWith('"')) || (arg.startsWith("'") && arg.endsWith("'"))) {
+    return arg;
+  }
+  if (/\s/.test(arg)) {
+    return `"${arg.replace(/"/g, '\\"')}"`;
+  }
+  return arg;
+}
+
 function runCondensed(commandArgs, options = {}) {
   return new Promise((resolve) => {
     const startTime = Date.now();
-    const commandStr = commandArgs.join(' ');
+    const commandStr = Array.isArray(commandArgs)
+      ? commandArgs.map(formatCommandArg).join(' ')
+      : String(commandArgs);
 
     const child = spawn(commandStr, {
       shell: true,
@@ -326,5 +339,6 @@ module.exports = {
   extractFailureDiagnostics,
   condenseOutput,
   runCondensed,
-  HeadTailCollector
+  HeadTailCollector,
+  formatCommandArg
 };

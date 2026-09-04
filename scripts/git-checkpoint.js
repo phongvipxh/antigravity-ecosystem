@@ -64,6 +64,10 @@ function createCheckpoint(label = 'checkpoint', cwd = process.cwd()) {
     }
   }
 
+  if (!commitSha) {
+    throw new Error('Repository has no commits or valid stash to create a checkpoint from.');
+  }
+
   // Record into isolated refs/checkpoints/<id>
   execSync(`git update-ref "${refName}" ${commitSha}`, { cwd, stdio: 'pipe' });
 
