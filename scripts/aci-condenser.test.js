@@ -25,10 +25,13 @@ describe('ACI Terminal Condenser Suite', () => {
     assert.equal(cleaned, 'Downloading...\nDownloaded 100%\nDone');
   });
 
-  test('isProgressNoise detects progress bars and spinners', () => {
+  test('isProgressNoise detects progress bars and spinners without dropping diff lines', () => {
     assert.equal(isProgressNoise('[====>    ] 45%'), true);
     assert.equal(isProgressNoise('⠋ Loading dependencies...'), true);
     assert.equal(isProgressNoise('Regular log line'), false);
+    assert.equal(isProgressNoise('-   "status": "ok",'), false);
+    assert.equal(isProgressNoise('+   "status": "failed",'), false);
+    assert.equal(isProgressNoise('- Expected value'), false);
   });
 
   test('extractSummary captures test and build summary lines', () => {
@@ -102,16 +105,42 @@ describe('ACI Terminal Condenser Suite', () => {
     assert.equal(formatCommandArg('-m Commit message with spaces'), '"-m Commit message with spaces"');
   });
 
-  test('extractFailureDiagnostics preserves both head and tail when errors exceed 60 lines', () => {
-    const lines = [];
-    lines.push('FAIL: Test 1');
-    for (let i = 2; i <= 80; i++) {
-      lines.push(`Error: Sub-failure ${i}`);
+  test('condenseOutput preserves 100% of failure diagnostics including diffs when under 800 lines', () => {
+    const failureLines = [
+      'AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:',
+      '+ actual - expected',
+      '+ {',
+      '+   "status": "failed",',
+      '+   "code": 500',
+      '+ }',
+      '- {',
+      '-   "status": "ok",',
+      '-   "code": 200',
+      '- }',
+      '    at TestContext.<anonymous> (test/api.test.js:45:10)',
+      '# fail 1'
+    ];
+    const res = condenseOutput(failureLines.join('\n'), 1, 'npm test', 500);
+    assert.ok(res.includes('[ACI: FAILURE]'));
+    assert.ok(res.includes('--- FULL FAILURE DIAGNOSTICS ---'));
+    assert.ok(res.includes('+   "status": "failed",'));
+    assert.ok(res.includes('-   "status": "ok",'));
+    assert.ok(res.includes('test/api.test.js:45:10'));
+  });
+
+  test('condenseOutput collapses middle lines only when failure log is a massive runaway flood (> 800 lines)', () => {
+    const floodLines = [];
+    floodLines.push('FIRST_ERROR: line 1 failed');
+    for (let i = 2; i <= 900; i++) {
+      floodLines.push(`Repeated spam line ${i}`);
     }
-    const diagnostics = extractFailureDiagnostics(lines);
-    assert.ok(diagnostics.length <= 62);
-    assert.ok(diagnostics[0].includes('FAIL: Test 1'), 'First error line preserved');
-    assert.ok(diagnostics[diagnostics.length - 1].includes('Sub-failure 80'), 'Last error line preserved');
-    assert.ok(diagnostics.some((l) => l.includes('middle error lines')), 'Middle collapsed notice present');
+    floodLines.push('FINAL_ERROR: line 901 failed');
+
+    const res = condenseOutput(floodLines.join('\n'), 1, 'node broken.js', 1000);
+    assert.ok(res.includes('[ACI: FAILURE (RUNAWAY LOG DETECTED)]'));
+    assert.ok(res.includes('FIRST_ERROR: line 1 failed'));
+    assert.ok(res.includes('FINAL_ERROR: line 901 failed'));
+    assert.ok(res.includes('COLLAPSED'));
+    assert.ok(res.includes('Infinite loop or flood guard'));
   });
 });

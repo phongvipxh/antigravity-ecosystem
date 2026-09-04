@@ -35,8 +35,10 @@ function isProgressNoise(line) {
   const trimmed = line.trim();
   if (!trimmed) return false;
   if (PROGRESS_BAR_REGEX.test(trimmed)) return true;
-  // If line starts with or is a spinner character
-  if (SPINNER_CHARS.some((char) => trimmed.startsWith(char) || trimmed === char)) return true;
+  // Exact single-char spinner
+  if (SPINNER_CHARS.includes(trimmed)) return true;
+  // Braille spinners followed by progress message (e.g. "⠋ Loading dependencies...")
+  if (/^[⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏]/.test(trimmed)) return true;
   // Common package manager progress lines
   if (/^(⸨[#\s]+⸩|\[\d+\/\d+\]\s+Fetch)/.test(trimmed)) return true;
   return false;
@@ -146,15 +148,28 @@ function condenseOutput(rawOutput, exitCode = 0, command = '', durationMs = 0) {
     ];
     return result.join('\n');
   } else {
-    const diagnostics = extractFailureDiagnostics(filteredLines);
-    const summary = extractSummary(filteredLines);
+    // ASYMMETRIC HANDLING: Full Diagnostic Fidelity on Failures
+    // Error logs are high-value ground truth (diffs, assertion mismatches, compiler carets).
+    // Preserve 100% of the diagnostics without arbitrary truncation or regex filtering.
+    if (totalLines <= 800) {
+      const result = [
+        `[ACI: FAILURE] Command: "${command}" | Exit: ${exitCode} | Duration: ${durationMs}ms | Lines: ${totalLines}`,
+        '--- FULL FAILURE DIAGNOSTICS ---',
+        ...filteredLines,
+        '--- END DIAGNOSTICS ---'
+      ];
+      return result.join('\n');
+    }
 
+    // Runaway Infinite Loop Flood Protection (> 800 lines):
+    // Retain generous 350-line Head + 350-line Tail, collapsing only the repetitive middle flood.
     const result = [
-      `[ACI: FAILURE] Command: "${command}" | Exit: ${exitCode} | Duration: ${durationMs}ms | Original: ${totalLines} lines`,
-      '--- CRITICAL DIAGNOSTICS ---',
-      ...(diagnostics.length > 0 ? diagnostics : filteredLines.slice(-15)),
-      '--- LAST KNOWN STATE ---',
-      ...summary,
+      `[ACI: FAILURE (RUNAWAY LOG DETECTED)] Command: "${command}" | Exit: ${exitCode} | Duration: ${durationMs}ms | Total Lines: ${totalLines}`,
+      '--- HEAD DIAGNOSTICS (First 350 lines) ---',
+      ...filteredLines.slice(0, 350),
+      `--- [COLLAPSED ${totalLines - 700} REPETITIVE LOG LINES (Infinite loop or flood guard)] ---`,
+      '--- TAIL DIAGNOSTICS (Last 350 lines) ---',
+      ...filteredLines.slice(-350),
       '--- END DIAGNOSTICS ---'
     ];
     return result.join('\n');
