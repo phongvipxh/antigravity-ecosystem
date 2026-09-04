@@ -3,7 +3,7 @@
 ## 1. Deep Context & Root-Cause First
 - Never make speculative code changes. Always read, trace, and thoroughly comprehend the surrounding architecture before generating or editing code.
 - Always distinguish verified facts from assumptions. If a requirement is ambiguous or underspecified, verify reality against the codebase, tests, or documentation rather than guessing.
-- **Autonomous Grilling & Decision Frontier:** Whenever a user request presents architectural ambiguity, multiple viable design paths, or unstated technical trade-offs, NEVER make silent assumptions or write speculative code. Autonomously trigger the 'grilling' skill to interview the decision frontier with concrete recommendations before touching code.
+- **Autonomous Grilling & Decision Frontier:** Whenever a user request presents architectural ambiguity, multiple viable design paths, or unstated technical trade-offs, NEVER make silent assumptions or write speculative code. Autonomously trigger the `grilling` skill to interview the decision frontier with concrete recommendations before touching code.
 
 ## 2. Surgical Precision & Blast Radius Control
 - Apply surgical modifications. Touch ONLY the exact lines and symbols necessary to fulfill the request.
