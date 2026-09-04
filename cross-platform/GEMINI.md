@@ -14,7 +14,6 @@
 - Strictly ban all forms of placeholder comments: `// ...`, `// rest of implementation`, `// TODO`, or omitted blocks.
 - Every function, class, and component must be delivered in complete, production-ready, 100% runnable form.
 
-
 ---
 
 # RULE 02: GROUND TRUTH & UNIVERSAL LIVE SEARCH
@@ -26,7 +25,6 @@
 ## 2. Ground Truth Verification Protocol
 - Always verify package names, import paths, and function signatures against official, authoritative documentation.
 - Never hallucinate non-existent parameters, deprecated options, or imagined configuration keys.
-
 
 ---
 
@@ -45,7 +43,6 @@
 - Whenever a test or verification step fails (`exit != 0`), the failure signature is automatically recorded into `.agents/scratchpad.md`.
 - The agent MUST review previously eliminated hypotheses before proposing the next mutation. Re-trying the exact same failed fix is strictly prohibited.
 
-
 ---
 
 # RULE 04: DEEP CONTEXT & EXHAUSTIVE RESEARCH
@@ -57,7 +54,6 @@
 ## 2. Exhaustive Call-Graph Mapping
 - Trace full caller hierarchies, data ingestion pipelines, and state transitions across multi-file boundaries before proposing significant modifications.
 - Maintain complete documentation integrity: preserve all unrelated docstrings, type definitions, and existing architectural patterns.
-
 
 ---
 
@@ -74,7 +70,6 @@
 ## 3. Secret Leak Prevention
 - Never write credentials, private keys, API keys, or secrets into source control or artifacts. Always use secure environment variables.
 
-
 ---
 
 # RULE 06: ADAPTIVE STATE & LIVING MEMORY BANK
@@ -90,8 +85,6 @@
 - Persist verified solutions from resolved debugging loops into `~/.gemini/config/lessons.jsonl` (global) and `.agents/lessons.jsonl` (project).
 - Automatically recall prior solutions on matching error signatures to avoid re-solving known issues across sessions.
 - Automatically distill lessons when scratchpad failure states resolve to mechanical Exit Code 0.
-
-
 
 ---
 
@@ -118,7 +111,7 @@
 - Upgrading legacy or generic AI designs -> 'redesign-existing-projects'.
 - Environment audit / Configuration health & token budget checkup -> 'system-checkup'.
 - Architectural ambiguity / Under-specified features / Multi-path design choices -> 'grilling' (autonomously active without user prompting).
-
+- Self-evolving skills / Reusable skill discovery & repair -> 'openspace-bridge' (HKUDS OpenSpace MCP + Mechanical Gate).
 
 ---
 
@@ -132,7 +125,6 @@
 - Always prefer 'replace_file_content' for precise, localized code edits over full-file overwrites.
 - Keep execution steps focused, decisive, and aligned with the KISS (Keep It Simple, Stupid) principle.
 
-
 ---
 
 # RULE 09: HARNESS ENGINEERING & SESSION MEMORY BUFFER
@@ -145,7 +137,6 @@
 ## 2. Session KI Anti-Truncation Buffer
 - In long-running sessions, maintain high-signal checkpoints in memory buffers to prevent context truncation amnesia.
 - Ensure that if a context truncation event occurs, execution can be resumed with zero latency and zero drift from original requirements.
-
 
 ---
 
@@ -237,6 +228,10 @@
   - **Tier 4 (Architectural Refactor):** Migrations, breaking changes -> max 2 subagents, max 15 turns, Git Micro-Checkpoints + Dual-Agent Audit.
   - **Tier 5 (Concurrency & Benchmark):** Race conditions, distributed state -> max 3 subagents, max 25 turns, Dynamic Ephemeral Harness + Best-of-N Trajectory Search.
 
-
-
-
+## 16. Self-Evolving Skill Engine & Mechanical Gatekeeper (OpenSpace Integration)
+- **Warm-Skill Pre-Flight Check:** Before building complex multi-step architectures or algorithmic modules from scratch, query `search_skills` via OpenSpace MCP to retrieve proven, high-quality skill implementations, reducing token overhead by up to 46%.
+- **Strict Mechanical Admission Gate:** A skill is ONLY eligible for registration or `upload_skill` into the persistent OpenSpace registry if it satisfies 3 deterministic criteria:
+  1. Mechanical Exit Code 0 test pass across all edge cases.
+  2. Zero-placeholder compliance (`scanPlaceholders == clean`).
+  3. Zero hardcoded absolute local paths or environment-leaking secrets.
+- **Autonomous Skill Repair (`fix_skill`):** When an existing skill fails during real-world execution, pass the complete mechanical failure trace into `fix_skill` to trigger focused evolutionary repair without polluting context.

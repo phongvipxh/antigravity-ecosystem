@@ -21,4 +21,5 @@
 - Upgrading legacy or generic AI designs -> 'redesign-existing-projects'.
 - Environment audit / Configuration health & token budget checkup -> 'system-checkup'.
 - Architectural ambiguity / Under-specified features / Multi-path design choices -> 'grilling' (autonomously active without user prompting).
+- Self-evolving skills / Reusable skill discovery & repair -> 'openspace-bridge' (HKUDS OpenSpace MCP + Mechanical Gate).
 

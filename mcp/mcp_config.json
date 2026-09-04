@@ -28,6 +28,20 @@
         "@playwright/mcp@latest",
         "--headless"
       ]
+    },
+    "openspace": {
+      "command": "C:/Users/lucaha/OpenSpace/.venv/Scripts/python.exe",
+      "args": [
+        "-m",
+        "openspace.entrypoints.mcp.server",
+        "--transport",
+        "stdio"
+      ],
+      "env": {
+        "OPENSPACE_WORKSPACE": "C:/Users/lucaha/OpenSpace",
+        "OPENSPACE_HOST_SKILL_DIRS": "C:/Users/lucaha/.gemini/config/skills",
+        "OPENSPACE_CLOUD_MODE": "local"
+      }
     }
   }
 }

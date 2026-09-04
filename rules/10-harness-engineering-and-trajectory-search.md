@@ -86,5 +86,14 @@
   - **Tier 4 (Architectural Refactor):** Migrations, breaking changes -> max 2 subagents, max 15 turns, Git Micro-Checkpoints + Dual-Agent Audit.
   - **Tier 5 (Concurrency & Benchmark):** Race conditions, distributed state -> max 3 subagents, max 25 turns, Dynamic Ephemeral Harness + Best-of-N Trajectory Search.
 
+## 16. Self-Evolving Skill Engine & Mechanical Gatekeeper (OpenSpace Integration)
+- **Warm-Skill Pre-Flight Check:** Before building complex multi-step architectures or algorithmic modules from scratch, query `search_skills` via OpenSpace MCP to retrieve proven, high-quality skill implementations, reducing token overhead by up to 46%.
+- **Strict Mechanical Admission Gate:** A skill is ONLY eligible for registration or `upload_skill` into the persistent OpenSpace registry if it satisfies 3 deterministic criteria:
+  1. Mechanical Exit Code 0 test pass across all edge cases.
+  2. Zero-placeholder compliance (`scanPlaceholders == clean`).
+  3. Zero hardcoded absolute local paths or environment-leaking secrets.
+- **Autonomous Skill Repair (`fix_skill`):** When an existing skill fails during real-world execution, pass the complete mechanical failure trace into `fix_skill` to trigger focused evolutionary repair without polluting context.
+
+
 
 
