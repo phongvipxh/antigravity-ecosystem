@@ -17,7 +17,7 @@ This repository contains the complete personal configuration, behavioral invaria
 antigravity-ecosystem/
 ├── rules/                  # 10 System Behavioral Directives (100% Full Specification)
 ├── skills/                 # 21 Autonomous Specialized Capabilities
-├── scripts/                # Harness tools (ACI condenser, Git checkpointing, System checkup)
+├── scripts/                # Harness tools (ACI condenser, Git checkpointing, Checkup, Loop breaker, Scratchpad ledger)
 ├── mcp/                    # Model Context Protocol (MCP) servers & tool schemas
 ├── cross-platform/         # Single-source-of-truth prompts (CLAUDE.md, .cursorrules)
 ├── install.ps1             # 1-Click deployment script for Windows
@@ -34,14 +34,14 @@ Each rule enforces a non-negotiable standard of cognitive rigor, safety, and cor
 | :--- | :--- | :--- |
 | **01** | **Core Engineering & Intent** | Staff-level architectural thinking; bans superficial/lazy code; deep causality analysis. |
 | **02** | **Ground Truth & Anti-Hallucination** | Hard verification against live codebase; zero assumptions on APIs, paths, or types. |
-| **03** | **Verification & Testing** | Mandatory regression testing, reproducible evidence, deterministic test suites. |
+| **03** | **Verification & Testing** | Mandatory regression testing, mechanical exit code 0, and hypothesis scratchpad ledger. |
 | **04** | **Deep Context & Exhaustive Research** | Reads entire modules, traces call graphs, full understanding before modifications. |
 | **05** | **Security & Safety** | Prevents secret leakage, privilege escalation, destructive commands, and unsafe regex. |
 | **06** | **Adaptive Project State** | Self-maintains living documentation and architectural invariants. |
 | **07** | **Invisible Autonomous Tool Orchestration** | Zero user cognitive overhead; autonomously triggers the exact skill matching user intent. |
 | **08** | **Gemini Precision & Anti-Lazy Coding** | Full implementation enforcement; bans `// TODO` or placeholder code. |
 | **09** | **Harness Engineering & Session Continuity** | Maintains conversational transcripts, durable memory, and cross-session resume. |
-| **10** | **Advanced Harness & Trajectory Search** | Multi-path Best-of-N search, ACI output condensation, micro-checkpointing, and dual-agent auditing. |
+| **10** | **Advanced Harness & Trajectory Search** | Multi-path Best-of-N search, ACI output condensation, micro-checkpointing, anti-loop circuit breaker, and scratchpad ledger. |
 
 ---
 

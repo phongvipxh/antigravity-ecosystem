@@ -59,3 +59,18 @@
   - For concurrent, security-critical, or high-blast-radius subsystems, invoke the `dual-agent-auditor` skill:
   - The Auditor receives ONLY the git diff and requirements under a strict information barrier, synthesizing adversarial fuzz tests to stress test the implementation before production certification.
 
+## 12. Anti-Loop Circuit Breaker & Stuck State Guard
+- LLMs cannot reliably self-diagnose repetitive action loops or token-burning deadlock.
+- `scripts/loop-breaker.js` monitors consecutive command invocations and failure output similarity:
+  - **Threshold:** Maximum 3 consecutive failures or >80% output similarity immediately trips the circuit breaker.
+  - **Advisor Intervention:** Injects an out-of-band diagnostic hint directly into the execution stream.
+  - **Mandatory Halt:** Prevents repeating the same failing trajectory without formulating a new hypothesis.
+
+## 13. Persistent Hypothesis Ledger (Scratchpad Memory Buffer)
+- Eliminates the "Groundhog Day" failure pattern during iterative debugging.
+- `scripts/scratchpad-ledger.js` automatically tracks invalid paths in `.agents/scratchpad.md`:
+  - Logs failure signatures, attempted patches, and eliminated hypotheses.
+  - Strictly prohibits the agent from re-attempting identical broken trajectories.
+  - Automatically verifies and archives resolution upon achieving mechanical Exit Code 0.
+
+

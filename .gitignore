@@ -21,6 +21,9 @@ tasks/
 evals/results/
 *.visual-check.*.png
 *.visual-check.*.html
+.agents/scratchpad.md
+.agents/loop-ledger.json
+.test_*
 
 # Environment variables & Secrets
 .env

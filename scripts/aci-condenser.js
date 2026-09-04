@@ -184,7 +184,27 @@ function runCondensed(commandArgs, options = {}) {
       const durationMs = Date.now() - startTime;
       const combinedOutput = (stdoutBuffer + '\n' + stderrBuffer).trim();
       const exitCode = code === null ? 1 : code;
-      const condensed = condenseOutput(combinedOutput, exitCode, commandStr, durationMs);
+      let condensed = condenseOutput(combinedOutput, exitCode, commandStr, durationMs);
+      const workspaceDir = options.cwd || process.cwd();
+
+      // Automated Anti-Loop Circuit Breaker & Stuck State Guard
+      try {
+        const { recordExecution } = require('./loop-breaker');
+        const loopState = recordExecution(commandStr, combinedOutput, exitCode, workspaceDir);
+        if (loopState && loopState.breakerTriggered && loopState.advisorHint) {
+          condensed += '\n\n' + loopState.advisorHint;
+        }
+      } catch {}
+
+      // Automated Hypothesis Ledger & Failure Elimination Buffer
+      try {
+        const { recordFailure, recordSuccess } = require('./scratchpad-ledger');
+        if (exitCode !== 0) {
+          recordFailure(commandStr, combinedOutput, workspaceDir);
+        } else {
+          recordSuccess(commandStr, workspaceDir);
+        }
+      } catch {}
 
       resolve({
         exitCode,
@@ -196,7 +216,14 @@ function runCondensed(commandArgs, options = {}) {
 
     child.on('error', (err) => {
       const durationMs = Date.now() - startTime;
-      const condensed = `[ACI: ERROR] Spawn error for "${commandStr}": ${err.message}`;
+      let condensed = `[ACI: ERROR] Spawn error for "${commandStr}": ${err.message}`;
+      const workspaceDir = options.cwd || process.cwd();
+
+      try {
+        const { recordFailure } = require('./scratchpad-ledger');
+        recordFailure(commandStr, err.message, workspaceDir);
+      } catch {}
+
       resolve({
         exitCode: 1,
         durationMs,

@@ -247,6 +247,8 @@ function auditHarnessTools(repoDir) {
   const scriptsDir = repoDir ? path.join(repoDir, 'scripts') : path.join(GEMINI_CONFIG, 'scripts');
   const aciPath = path.join(scriptsDir, 'aci-condenser.js');
   const checkpointPath = path.join(scriptsDir, 'git-checkpoint.js');
+  const loopBreakerPath = path.join(scriptsDir, 'loop-breaker.js');
+  const scratchpadPath = path.join(scriptsDir, 'scratchpad-ledger.js');
 
   if (fs.existsSync(aciPath)) {
     result.details.push('ACI Terminal Condenser: Installed and ready');
@@ -271,6 +273,20 @@ function auditHarnessTools(repoDir) {
   } else {
     result.status = 'WARN';
     result.details.push(`Git Micro-Checkpointing Engine: Missing at ${checkpointPath}`);
+  }
+
+  if (fs.existsSync(loopBreakerPath)) {
+    result.details.push('Anti-Loop Circuit Breaker: Installed and ready');
+  } else {
+    result.status = 'WARN';
+    result.details.push(`Anti-Loop Circuit Breaker: Missing at ${loopBreakerPath}`);
+  }
+
+  if (fs.existsSync(scratchpadPath)) {
+    result.details.push('Hypothesis Scratchpad Ledger: Installed and ready');
+  } else {
+    result.status = 'WARN';
+    result.details.push(`Hypothesis Scratchpad Ledger: Missing at ${scratchpadPath}`);
   }
 
   return result;
