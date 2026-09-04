@@ -99,11 +99,11 @@ function extractFailureDiagnostics(lines) {
     }
 
     if (inStackTrace) {
-      if (isStackLine && stackLinesCount < 8) {
+      if (isStackLine && stackLinesCount < 100) {
         errorLines.push(line);
         stackLinesCount++;
       } else if (!isStackLine) {
-        if (stackLinesCount < 8 && !trimmed.startsWith('#')) {
+        if (!trimmed.startsWith('#')) {
           errorLines.push(line);
         } else {
           inStackTrace = false;
@@ -116,15 +116,7 @@ function extractFailureDiagnostics(lines) {
     }
   }
 
-  const uniqueLines = Array.from(new Set(errorLines));
-  if (uniqueLines.length > 60) {
-    return [
-      ...uniqueLines.slice(0, 30),
-      `... [collapsed ${uniqueLines.length - 60} middle error lines] ...`,
-      ...uniqueLines.slice(-30)
-    ];
-  }
-  return uniqueLines;
+  return Array.from(new Set(errorLines));
 }
 
 function condenseOutput(rawOutput, exitCode = 0, command = '', durationMs = 0) {

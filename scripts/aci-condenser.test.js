@@ -49,17 +49,23 @@ describe('ACI Terminal Condenser Suite', () => {
     assert.ok(summary.some((line) => line.includes('# pass 24')));
   });
 
-  test('extractFailureDiagnostics captures stack traces and assertions', () => {
+  test('extractFailureDiagnostics captures deep call-stack traces and assertions without truncation', () => {
     const lines = [
       'info: running tests',
       'AssertionError [ERR_ASSERTION]: Expected true but got false',
       '    at TestContext.<anonymous> (test/math.test.js:14:12)',
-      '    at Test.run (node:internal/test_runner/test:892:25)',
-      '# fail 1'
+      '    at Test.run (node:internal/test_runner/test:892:25)'
     ];
+    // Add 25 deep stack frames
+    for (let i = 1; i <= 25; i++) {
+      lines.push(`    at DeepCall_${i} (internal/module_${i}.js:${i * 10}:5)`);
+    }
+    lines.push('# fail 1');
     const diags = extractFailureDiagnostics(lines);
     assert.ok(diags.some((d) => d.includes('AssertionError')));
     assert.ok(diags.some((d) => d.includes('test/math.test.js')));
+    assert.ok(diags.some((d) => d.includes('DeepCall_25')), 'Deep stack frame must be preserved under Rule 04');
+    assert.equal(diags.length, 28, 'All stack frames and assertions must be preserved without clipping');
   });
 
   test('condenseOutput retains short output verbatim on success', () => {

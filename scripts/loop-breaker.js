@@ -130,24 +130,23 @@ function checkLoopState(workspaceDir = process.cwd(), currentOutput = '') {
   const streak = recentFailures.length;
 
   if (streak >= MAX_CONSECUTIVE_FAILURES) {
-    // Check if commands are identical
-    const allSameCommand = recentFailures.every((f) => f.command === recentFailures[0].command);
+    // Evaluate stagnation on the sliding window of the most recent MAX_CONSECUTIVE_FAILURES
+    const window = recentFailures.slice(0, MAX_CONSECUTIVE_FAILURES);
+    const allSameHash = window.every((f) => f.outputHash === window[0].outputHash);
+    const oldestInWindow = window[window.length - 1].snippet;
+    const latestInWindow = window[0].snippet || currentOutput;
+    const similarity = calculateJaccardSimilarity(oldestInWindow, latestInWindow);
 
-    // Check similarity between first and last failure in streak
-    const firstSnippet = recentFailures[recentFailures.length - 1].snippet;
-    const latestSnippet = recentFailures[0].snippet || currentOutput;
-    const similarity = calculateJaccardSimilarity(firstSnippet, latestSnippet);
-
-    if (allSameCommand || similarity >= SIMILARITY_THRESHOLD) {
+    if (allSameHash || similarity >= SIMILARITY_THRESHOLD) {
       return {
         isLooping: true,
         breakerTriggered: true,
         streak,
         similarity: parseFloat(similarity.toFixed(2)),
-        loopType: allSameCommand ? 'IDENTICAL_COMMAND_REPEAT' : 'OUTPUT_STAGNATION',
+        loopType: allSameHash ? 'IDENTICAL_FAILURE_REPEAT' : 'OUTPUT_STAGNATION',
         advisorHint: [
           `[CIRCUIT BREAKER: LOOP DETECTED] Streak: ${streak} consecutive failures | Similarity: ${(similarity * 100).toFixed(0)}%`,
-          `ADVISOR HINT: You are repeating the same failing trajectory for "${recentFailures[0].command}".`,
+          `ADVISOR HINT: You are repeating the same failing trajectory for "${window[0].command}".`,
           'ACTION REQUIRED: STOP immediately. Do NOT run this command again without fundamentally altering your hypothesis.',
           'Check .agents/scratchpad.md for eliminated paths, or rollback via: node scripts/git-checkpoint.js rollback'
         ].join('\n')
