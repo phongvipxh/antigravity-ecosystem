@@ -33,6 +33,12 @@ if [ -f "mcp/mcp_config.json" ]; then
     if [ -d "$HOME/.cursor" ]; then
         cp -f mcp/mcp_config.json "$HOME/.cursor/mcp.json"
     fi
+    if [ -d "$HOME/.gemini/antigravity" ]; then
+        cp -f mcp/mcp_config.json "$HOME/.gemini/antigravity/mcp_config.json"
+    fi
+    if [ -d "$HOME/.gemini/antigravity-ide" ]; then
+        cp -f mcp/mcp_config.json "$HOME/.gemini/antigravity-ide/mcp_config.json"
+    fi
 fi
 
 # 6. Synchronize to .agents Workspace Layer (Antigravity IDE & CLI Priority)
@@ -49,6 +55,7 @@ fi
 echo -e "[Cross-Platform] Syncing root GEMINI.md, AGENTS.md, CLAUDE.md, .cursorrules..."
 if [ -f "cross-platform/GEMINI.md" ]; then
     cp -f cross-platform/GEMINI.md "$HOME/GEMINI.md"
+    cp -f cross-platform/GEMINI.md "$HOME/.gemini/GEMINI.md"
 fi
 if [ -f "cross-platform/AGENTS.md" ]; then
     cp -f cross-platform/AGENTS.md "$HOME/AGENTS.md"

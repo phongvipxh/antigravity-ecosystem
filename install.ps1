@@ -37,6 +37,15 @@ if (Test-Path "mcp\mcp_config.json") {
     if (Test-Path $CURSOR_DIR) {
         Copy-Item -Force "mcp\mcp_config.json" (Join-Path $CURSOR_DIR "mcp.json")
     }
+    # Direct sync to Antigravity 2.0 and Antigravity IDE surfaces
+    $AGY_APP_DIR = Join-Path $HOME_DIR ".gemini\antigravity"
+    if (Test-Path $AGY_APP_DIR) {
+        Copy-Item -Force "mcp\mcp_config.json" (Join-Path $AGY_APP_DIR "mcp_config.json")
+    }
+    $AGY_IDE_DIR = Join-Path $HOME_DIR ".gemini\antigravity-ide"
+    if (Test-Path $AGY_IDE_DIR) {
+        Copy-Item -Force "mcp\mcp_config.json" (Join-Path $AGY_IDE_DIR "mcp_config.json")
+    }
 }
 
 # 6. Synchronize to .agents Workspace Layer (Antigravity IDE & CLI Priority)
@@ -59,6 +68,7 @@ if (Test-Path "mcp\mcp_config.json") {
 Write-Host "[Cross-Platform] Syncing root GEMINI.md, AGENTS.md, CLAUDE.md, .cursorrules..." -ForegroundColor Yellow
 if (Test-Path "cross-platform\GEMINI.md") {
     Copy-Item -Force "cross-platform\GEMINI.md" (Join-Path $HOME_DIR "GEMINI.md")
+    Copy-Item -Force "cross-platform\GEMINI.md" (Join-Path $HOME_DIR ".gemini\GEMINI.md")
 }
 if (Test-Path "cross-platform\AGENTS.md") {
     Copy-Item -Force "cross-platform\AGENTS.md" (Join-Path $HOME_DIR "AGENTS.md")
