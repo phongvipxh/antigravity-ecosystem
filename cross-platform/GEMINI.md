@@ -14,6 +14,7 @@
 - Strictly ban all forms of placeholder comments: `// ...`, `// rest of implementation`, `// TODO`, or omitted blocks.
 - Every function, class, and component must be delivered in complete, production-ready, 100% runnable form.
 
+
 ---
 
 # RULE 02: GROUND TRUTH & UNIVERSAL LIVE SEARCH
@@ -25,6 +26,7 @@
 ## 2. Ground Truth Verification Protocol
 - Always verify package names, import paths, and function signatures against official, authoritative documentation.
 - Never hallucinate non-existent parameters, deprecated options, or imagined configuration keys.
+
 
 ---
 
@@ -43,6 +45,8 @@
 - Whenever a test or verification step fails (`exit != 0`), the failure signature is automatically recorded into `.agents/scratchpad.md`.
 - The agent MUST review previously eliminated hypotheses before proposing the next mutation. Re-trying the exact same failed fix is strictly prohibited.
 
+
+
 ---
 
 # RULE 04: DEEP CONTEXT & EXHAUSTIVE RESEARCH
@@ -54,6 +58,7 @@
 ## 2. Exhaustive Call-Graph Mapping
 - Trace full caller hierarchies, data ingestion pipelines, and state transitions across multi-file boundaries before proposing significant modifications.
 - Maintain complete documentation integrity: preserve all unrelated docstrings, type definitions, and existing architectural patterns.
+
 
 ---
 
@@ -70,6 +75,7 @@
 ## 3. Secret Leak Prevention
 - Never write credentials, private keys, API keys, or secrets into source control or artifacts. Always use secure environment variables.
 
+
 ---
 
 # RULE 06: ADAPTIVE STATE & LIVING MEMORY BANK
@@ -85,6 +91,8 @@
 - Persist verified solutions from resolved debugging loops into `~/.gemini/config/lessons.jsonl` (global) and `.agents/lessons.jsonl` (project).
 - Automatically recall prior solutions on matching error signatures to avoid re-solving known issues across sessions.
 - Automatically distill lessons when scratchpad failure states resolve to mechanical Exit Code 0.
+
+
 
 ---
 
@@ -113,6 +121,8 @@
 - Architectural ambiguity / Under-specified features / Multi-path design choices -> 'grilling' (autonomously active without user prompting).
 - Self-evolving skills / Reusable skill discovery & repair -> 'openspace-bridge' (HKUDS OpenSpace MCP + Mechanical Gate).
 
+
+
 ---
 
 # RULE 08: GEMINI PRECISION & ANTI-LAZY CODING
@@ -124,6 +134,7 @@
 ## 2. Surgical Tool Prioritization
 - Always prefer 'replace_file_content' for precise, localized code edits over full-file overwrites.
 - Keep execution steps focused, decisive, and aligned with the KISS (Keep It Simple, Stupid) principle.
+
 
 ---
 
@@ -137,6 +148,7 @@
 ## 2. Session KI Anti-Truncation Buffer
 - In long-running sessions, maintain high-signal checkpoints in memory buffers to prevent context truncation amnesia.
 - Ensure that if a context truncation event occurs, execution can be resumed with zero latency and zero drift from original requirements.
+
 
 ---
 
@@ -235,3 +247,31 @@
   2. Zero-placeholder compliance (`scanPlaceholders == clean`).
   3. Zero hardcoded absolute local paths or environment-leaking secrets.
 - **Autonomous Skill Repair (`fix_skill`):** When an existing skill fails during real-world execution, pass the complete mechanical failure trace into `fix_skill` to trigger focused evolutionary repair without polluting context.
+
+## 17. Deterministic Command Execution Policy (Codex-execpolicy Standard)
+- All terminal commands are evaluated via `scripts/exec-policy.js` into three deterministic tiers:
+  - **ALLOW:** Safe read-only inspection, file viewing, and test suites (`git status`, `node --test`, `npm test`, `pytest`, `cargo test`, `dir`, `cat`) execute autonomously with zero cognitive overhead.
+  - **PROMPT:** State-mutating commands (`npm install`, `git commit`, `git checkout`, file output redirection `>`) require automatic pre-execution checkpointing.
+  - **FORBIDDEN:** Catastrophic destructive commands (`rm -rf /`, `git reset --hard`, `git clean -fdx`, database drops) are blocked mechanically at the harness layer with human-readable justification and safer alternatives.
+
+## 18. File State Cache & Redundant Read Elimination (Claude Code Standard)
+- File reads across multi-turn sessions are mediated via `scripts/file-cache.js`:
+  - Tracks file path, mtime, size, and SHA-256 hash.
+  - If a file is unchanged since the last read, suppresses redundant full-file reads, saving thousands of tokens per turn.
+  - Automatically invalidates entries when files are modified on disk.
+
+## 19. Trajectory Rollout State Machine & Tree Backtracking (Codex Rollout Standard)
+- Speculative rollouts and multi-candidate coding tournaments are managed via `scripts/rollout-manager.js`:
+  - Maintains state-space exploration trees with verified milestone nodes.
+  - When an exploratory branch hits a failing dead-end (`DEAD_END`), the harness automatically backtracks to the closest verified ancestor node with `pass: true` and restores the associated checkpoint.
+  - Session trajectories are exportable and reloadable in structured JSONL format.
+
+## 20. Byte-Exact Prompt Cache Invariance (Claude Code 95% Invariant Standard)
+- System prompts, tool schemas, and core master rules must maintain a **Static Invariant Prefix**:
+  - The shared prefix of the prompt must remain 100% byte-exact across conversation turns and subagent forks.
+  - Strictly prohibit prepending volatile runtime metadata (e.g. changing timestamps, dynamic turn counters, random UUIDs) to rules or system headers.
+  - All dynamic context (file diffs, active scratchpad, error traces) must be appended strictly at the tail of the message history to guarantee >90% prompt cache hit rates.
+
+
+
+

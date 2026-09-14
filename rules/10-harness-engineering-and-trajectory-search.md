@@ -94,6 +94,30 @@
   3. Zero hardcoded absolute local paths or environment-leaking secrets.
 - **Autonomous Skill Repair (`fix_skill`):** When an existing skill fails during real-world execution, pass the complete mechanical failure trace into `fix_skill` to trigger focused evolutionary repair without polluting context.
 
+## 17. Deterministic Command Execution Policy (Codex-execpolicy Standard)
+- All terminal commands are evaluated via `scripts/exec-policy.js` into three deterministic tiers:
+  - **ALLOW:** Safe read-only inspection, file viewing, and test suites (`git status`, `node --test`, `npm test`, `pytest`, `cargo test`, `dir`, `cat`) execute autonomously with zero cognitive overhead.
+  - **PROMPT:** State-mutating commands (`npm install`, `git commit`, `git checkout`, file output redirection `>`) require automatic pre-execution checkpointing.
+  - **FORBIDDEN:** Catastrophic destructive commands (`rm -rf /`, `git reset --hard`, `git clean -fdx`, database drops) are blocked mechanically at the harness layer with human-readable justification and safer alternatives.
+
+## 18. File State Cache & Redundant Read Elimination (Claude Code Standard)
+- File reads across multi-turn sessions are mediated via `scripts/file-cache.js`:
+  - Tracks file path, mtime, size, and SHA-256 hash.
+  - If a file is unchanged since the last read, suppresses redundant full-file reads, saving thousands of tokens per turn.
+  - Automatically invalidates entries when files are modified on disk.
+
+## 19. Trajectory Rollout State Machine & Tree Backtracking (Codex Rollout Standard)
+- Speculative rollouts and multi-candidate coding tournaments are managed via `scripts/rollout-manager.js`:
+  - Maintains state-space exploration trees with verified milestone nodes.
+  - When an exploratory branch hits a failing dead-end (`DEAD_END`), the harness automatically backtracks to the closest verified ancestor node with `pass: true` and restores the associated checkpoint.
+  - Session trajectories are exportable and reloadable in structured JSONL format.
+
+## 20. Byte-Exact Prompt Cache Invariance (Claude Code 95% Invariant Standard)
+- System prompts, tool schemas, and core master rules must maintain a **Static Invariant Prefix**:
+  - The shared prefix of the prompt must remain 100% byte-exact across conversation turns and subagent forks.
+  - Strictly prohibit prepending volatile runtime metadata (e.g. changing timestamps, dynamic turn counters, random UUIDs) to rules or system headers.
+  - All dynamic context (file diffs, active scratchpad, error traces) must be appended strictly at the tail of the message history to guarantee >90% prompt cache hit rates.
+
 
 
 

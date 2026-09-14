@@ -20,6 +20,10 @@
   - **Rule 10.14:** Cross-Session Reflection Ledger & Experience Memory (`lessons.jsonl` error recall and resolution distillation).
   - **Rule 10.15:** Adaptive Test-Time Compute (TTC) Allocation (dynamic compute budget scaling across 5 complexity tiers).
   - **Rule 10.16:** HKUDS/OpenSpace Integration & Mechanical Gatekeeper Protocol (3-Gate admission pipeline preventing skill poisoning: Exit code 0, 0 placeholders, 0 secrets).
+  - **Rule 10.17:** Deterministic Command Execution Policy (`exec-policy.js` ALLOW / PROMPT / FORBIDDEN gating inspired by OpenAI `codex-execpolicy`).
+  - **Rule 10.18:** File State Cache & Redundant Read Elimination (`file-cache.js` mtime + SHA-256 hash cache inspired by Claude Code `FileStateCache`).
+  - **Rule 10.19:** Trajectory Rollout State Machine & Tree Backtracking (`rollout-manager.js` candidate tracking & auto-backtrack inspired by OpenAI `rollout`).
+  - **Rule 10.20:** Byte-Exact Prompt Cache Invariance (Claude Code 95% Invariant principle: static immutable prefix for >90% cache hits).
 
 ---
 
@@ -35,6 +39,12 @@
 ---
 
 ## 3. Harness Engineering Tooling (`scripts/`)
+- `scripts/exec-policy.js`: Deterministic Command Execution Policy Engine (Codex-execpolicy standard, ALLOW/PROMPT/FORBIDDEN with justification).
+- `scripts/exec-policy.test.js`: Automated unit test suite (5 tests passing, Exit Code 0).
+- `scripts/file-cache.js`: File State Cache & Redundant Read Eliminator (Claude Code FileStateCache standard, mtime+hash tracking).
+- `scripts/file-cache.test.js`: Automated unit test suite (4 tests passing, Exit Code 0).
+- `scripts/rollout-manager.js`: Trajectory Rollout State Machine & Backtracking Manager (Codex rollout standard, tree-search backtracking).
+- `scripts/rollout-manager.test.js`: Automated unit test suite (4 tests passing, Exit Code 0).
 - `scripts/lessons-ledger.js`: Cross-Session Reflection Ledger Engine (distills solutions to `lessons.jsonl`, queries prior fixes on error, Exit Code 0).
 - `scripts/lessons-ledger.test.js`: Automated unit test suite (6 tests passing, Exit Code 0).
 - `scripts/ttc-profiler.js`: Adaptive Test-Time Compute (TTC) Profiler (dynamically profiles task complexity into 5 Tiers and assigns budgets, Exit Code 0).
@@ -55,9 +65,9 @@
 ## 4. Mechanical Verification History
 - `node --test scripts/*.test.js`
   - **Exit Code:** `0`
-  - **Total Tests:** 46 passed, 0 failed across 7 test suites in ~3.4s.
+  - **Total Tests:** 59 passed, 0 failed across 10 test suites in ~4.8s.
 - `node scripts/checkup.js`
-  - **Overall Health Status:** `[PASS]` (Context budget 4,430 tokens = 0.443%, 0 rule drift, 22 skills valid, 5 MCP servers active, 0 secret leaks).
+  - **Overall Health Status:** `[PASS]` (Context budget ~5,014 tokens = ~0.5%, 0 rule drift, 22 skills valid, 5 MCP servers active, 0 secret leaks).
 - `scratch/test-mechanical-gatekeeper.js`
   - **Exit Code:** `0` (Verified 3-Gate admission: dirty rejection on placeholders, test failure rejection, pristine admission).
 - `scratch/test-mcp-handshake.js`
