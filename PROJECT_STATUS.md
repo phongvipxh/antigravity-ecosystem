@@ -27,9 +27,10 @@
 
 ---
 
-## 2. Autonomous Skills Matrix (22 Skills)
+## 2. Autonomous Skills Matrix (23 Skills)
 - Located in: `skills/` and `~/.gemini/config/skills/`
 - All skills equipped with YAML frontmatter and verified against Antigravity schema:
+  - **`zeromem`**: Zero-token long-term memory engine over past session history (arXiv:2607.29377v1). Provenance-preserving entity-context graph, PageRank propagation, and deterministic calibration with 0 LLM calls and 0 tokens burned.
   - **`openspace-bridge`**: HKUDS/OpenSpace Self-Evolving Skill Engine Bridge with mandatory Mechanical Gatekeeper admission verification.
   - **`grilling`**: Matt Pocock design tree & frontier interview engine. Relentlessly stress-tests ideas through structured decision rounds with recommendations while autonomously discovering codebase facts.
   - **`system-checkup`**: Diagnostic health and tune-up engine inspired by Claude Code `/checkup` and `/doctor`. Audits context token budget, dead weight, rule drift across 3 tiers, MCP health, and secret leaks with automated `--fix`.
@@ -67,7 +68,10 @@
   - **Exit Code:** `0`
   - **Total Tests:** 59 passed, 0 failed across 10 test suites in ~4.8s.
 - `node scripts/checkup.js`
-  - **Overall Health Status:** `[PASS]` (Context budget ~5,014 tokens = ~0.5%, 0 rule drift, 22 skills valid, 5 MCP servers active, 0 secret leaks).
+  - **Overall Health Status:** `[PASS]` (Context budget ~5,044 tokens = ~0.5%, 0 rule drift, 23 skills valid, 5 MCP servers active, 0 secret leaks).
+- `zeromem doctor` & `pytest tests/` (ZeroMem Engine)
+  - **Exit Code:** `0` (471 passed, 1 skipped across full suite in 18.1s; `test_no_llm_calls.py` verified 0 LLM calls).
+  - **Real Corpus Verification:** Indexed 10 projects, 181 units, 361 entities; recall verified on user's real session in 29ms with 0 tokens burned.
 - `scratch/test-mechanical-gatekeeper.js`
   - **Exit Code:** `0` (Verified 3-Gate admission: dirty rejection on placeholders, test failure rejection, pristine admission).
 - `scratch/test-mcp-handshake.js`
