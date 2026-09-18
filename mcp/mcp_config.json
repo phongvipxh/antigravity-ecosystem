@@ -42,6 +42,12 @@
         "OPENSPACE_HOST_SKILL_DIRS": "C:/Users/lucaha/.gemini/config/skills",
         "OPENSPACE_CLOUD_MODE": "local"
       }
+    },
+    "zeromem": {
+      "command": "node",
+      "args": [
+        "C:/Users/lucaha/antigravity-ecosystem/mcp/zeromem-server.js"
+      ]
     }
   }
 }

@@ -22,4 +22,5 @@
 - Environment audit / Configuration health & token budget checkup -> 'system-checkup'.
 - Architectural ambiguity / Under-specified features / Multi-path design choices -> 'grilling' (autonomously active without user prompting).
 - Self-evolving skills / Reusable skill discovery & repair -> 'openspace-bridge' (HKUDS OpenSpace MCP + Mechanical Gate).
+- Past session recall / Cross-session transcript search / Historical solution lookup -> 'zeromem' (Zero-token long-term memory engine).
 
